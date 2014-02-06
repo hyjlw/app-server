@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.icc.app.dao.BaseModulesMapper" >
+  <resultMap id="BaseResultMap" type="org.icc.app.pojo.BaseModules" >
+    <id column="module_id" property="moduleId" jdbcType="DECIMAL" />
+    <result column="module_name" property="moduleName" jdbcType="VARCHAR" />
+    <result column="module_url" property="moduleUrl" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="DECIMAL" />
+    <result column="leaf" property="leaf" jdbcType="DECIMAL" />
+    <result column="expanded" property="expanded" jdbcType="DECIMAL" />
+    <result column="display_index" property="displayIndex" jdbcType="DECIMAL" />
+    <result column="is_display" property="isDisplay" jdbcType="DECIMAL" />
+    <result column="en_module_name" property="enModuleName" jdbcType="VARCHAR" />
+    <result column="icon_css" property="iconCss" jdbcType="VARCHAR" />
+    <result column="information" property="information" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="condition.moduleNameLike != null" >
+       <![CDATA[ and module_name LIKE CONCAT(CONCAT('%', #{condition.realNameLike}), '%') ]]>
+      </if>
+      <if test="condition.moduleName != null" >
+         and module_name = #{condition.moduleName}
+      </if>
+      <if test="condition.moduleUrl != null" >
+         and module_url = #{condition.moduleUrl}
+      </if>
+      <if test="condition.parentId != null" >
+         and parent_id = #{condition.parentId}
+      </if>
+      <if test="condition.leaf != null" >
+         and leaf = #{condition.leaf}
+      </if>
+      <if test="condition.expanded != null" >
+         and expanded = #{condition.expanded}
+      </if>
+      <if test="condition.displayIndex != null" >
+         and display_index = #{condition.displayIndex}
+      </if>
+      <if test="condition.isDisplay != null" >
+         and is_display = #{condition.isDisplay}
+      </if>
+      <if test="condition.enModuleName != null" >
+         and en_module_name = #{condition.enModuleName}
+      </if>
+      <if test="condition.iconCss != null" >
+         and icon_css = #{condition.iconCss}
+      </if>
+      <if test="condition.information != null" >
+         and information = #{condition.information}
+      </if>
+    </trim>
+  </sql>
+  <sql id="Base_Column_List" >
+    module_id, module_name, module_url, parent_id, leaf, expanded, display_index, is_display, 
+    en_module_name, icon_css, information
+  </sql>
+  <!-- 根据用户ID查询系统菜单 -->
+  <select id="selectMyModules" resultMap="BaseResultMap" parameterType="org.icc.app.pojo.Criteria" >
+	SELECT  
+		<if test="distinct" >
+	      distinct
+	    </if>
+		   a.module_id,
+	       a.module_name,
+	       a.module_url,
+	       a.parent_id,
+	       a.leaf,
+	       a.expanded,
+	       a.display_index,
+	       a.is_display,
+	       a.en_module_name,
+	       a.icon_css,
+	       a.information
+	  FROM base_modules     a,
+	       base_role_module b,
+	       base_roles       c,
+	       base_user_role   d,
+	       base_users       e
+	 WHERE a.module_id = b.module_id
+	   AND b.role_id = c.role_id
+	   AND c.role_id = d.role_id
+	   AND d.user_id = e.user_id
+  	<if test="condition.userId != null" >
+      AND e.user_id = #{condition.userId}
+    </if>
+    <if test="condition.isDisplay != null" >
+      AND a.is_display = #{condition.isDisplay}
+    </if>
+	<if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.icc.app.pojo.Criteria" >
+    <include refid="common.MySQL_Pagination_Head" />
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from base_modules
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <include refid="common.MySQL_Pagination_Tail" />
+  </select>
+  <!-- 动态sql，最好不要带外部参数拼装进来，防止SQL注入 -->
+  <select id="selectByDynamicSql" parameterType="org.icc.app.pojo.Criteria"
+	resultType="java.util.HashMap">
+		<![CDATA[ ${condition.dynamicSql} ]]>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from base_modules
+    where module_id = #{moduleId}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from base_modules
+    where module_id = #{moduleId}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.icc.app.pojo.Criteria" >
+    delete from base_modules
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.icc.app.pojo.BaseModules" >
+  	<selectKey resultType="java.lang.Integer" keyProperty="moduleId" order="BEFORE" >
+      select nextval('ModuleSeq')
+    </selectKey>
+    insert into base_modules (module_id, module_name, module_url, parent_id, leaf, expanded, 
+      display_index, is_display, en_module_name, icon_css, information)
+    values (#{moduleId}, #{moduleName}, #{moduleUrl}, #{parentId}, #{leaf}, #{expanded}, 
+      #{displayIndex}, #{isDisplay}, #{enModuleName}, #{iconCss}, #{information})
+  </insert>
+  <insert id="insertSelective" parameterType="org.icc.app.pojo.BaseModules" >
+  	<selectKey resultType="java.lang.Integer" keyProperty="moduleId" order="BEFORE" >
+      select nextval('ModuleSeq')
+    </selectKey>
+    insert into base_modules
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+        module_id,
+      <if test="moduleName != null" >
+        module_name,
+      </if>
+      <if test="moduleUrl != null" >
+        module_url,
+      </if>
+      <if test="parentId != null" >
+        parent_id,
+      </if>
+      <if test="leaf != null" >
+        leaf,
+      </if>
+      <if test="expanded != null" >
+        expanded,
+      </if>
+      <if test="displayIndex != null" >
+        display_index,
+      </if>
+      <if test="isDisplay != null" >
+        is_display,
+      </if>
+      <if test="enModuleName != null" >
+        en_module_name,
+      </if>
+      <if test="iconCss != null" >
+        icon_css,
+      </if>
+      <if test="information != null" >
+        information,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+        #{moduleId},
+      <if test="moduleName != null" >
+        #{moduleName},
+      </if>
+      <if test="moduleUrl != null" >
+        #{moduleUrl},
+      </if>
+      <if test="parentId != null" >
+        #{parentId},
+      </if>
+      <if test="leaf != null" >
+        #{leaf},
+      </if>
+      <if test="expanded != null" >
+        #{expanded},
+      </if>
+      <if test="displayIndex != null" >
+        #{displayIndex},
+      </if>
+      <if test="isDisplay != null" >
+        #{isDisplay},
+      </if>
+      <if test="enModuleName != null" >
+        #{enModuleName},
+      </if>
+      <if test="iconCss != null" >
+        #{iconCss},
+      </if>
+      <if test="information != null" >
+        #{information},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.icc.app.pojo.Criteria" resultType="java.lang.Integer" >
+    select count(*) from base_modules
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update base_modules
+    <set >
+      <if test="record.moduleId != null" >
+        module_id = #{record.moduleId},
+      </if>
+      <if test="record.moduleName != null" >
+        module_name = #{record.moduleName},
+      </if>
+      <if test="record.moduleUrl != null" >
+        module_url = #{record.moduleUrl},
+      </if>
+      <if test="record.parentId != null" >
+        parent_id = #{record.parentId},
+      </if>
+      <if test="record.leaf != null" >
+        leaf = #{record.leaf},
+      </if>
+      <if test="record.expanded != null" >
+        expanded = #{record.expanded},
+      </if>
+      <if test="record.displayIndex != null" >
+        display_index = #{record.displayIndex},
+      </if>
+      <if test="record.isDisplay != null" >
+        is_display = #{record.isDisplay},
+      </if>
+      <if test="record.enModuleName != null" >
+        en_module_name = #{record.enModuleName},
+      </if>
+      <if test="record.iconCss != null" >
+        icon_css = #{record.iconCss},
+      </if>
+      <if test="record.information != null" >
+        information = #{record.information},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update base_modules
+    set module_id = #{record.moduleId},
+      module_name = #{record.moduleName},
+      module_url = #{record.moduleUrl},
+      parent_id = #{record.parentId},
+      leaf = #{record.leaf},
+      expanded = #{record.expanded},
+      display_index = #{record.displayIndex},
+      is_display = #{record.isDisplay},
+      en_module_name = #{record.enModuleName},
+      icon_css = #{record.iconCss},
+      information = #{record.information}
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.icc.app.pojo.BaseModules" >
+    update base_modules
+    <set >
+      <if test="moduleName != null" >
+        module_name = #{moduleName},
+      </if>
+      <if test="moduleUrl != null" >
+        module_url = #{moduleUrl},
+      </if>
+      <if test="parentId != null" >
+        parent_id = #{parentId},
+      </if>
+      <if test="leaf != null" >
+        leaf = #{leaf},
+      </if>
+      <if test="expanded != null" >
+        expanded = #{expanded},
+      </if>
+      <if test="displayIndex != null" >
+        display_index = #{displayIndex},
+      </if>
+      <if test="isDisplay != null" >
+        is_display = #{isDisplay},
+      </if>
+      <if test="enModuleName != null" >
+        en_module_name = #{enModuleName},
+      </if>
+      <if test="iconCss != null" >
+        icon_css = #{iconCss},
+      </if>
+      <if test="information != null" >
+        information = #{information},
+      </if>
+    </set>
+    where module_id = #{moduleId}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.icc.app.pojo.BaseModules" >
+    update base_modules
+    set module_name = #{moduleName},
+      module_url = #{moduleUrl},
+      parent_id = #{parentId},
+      leaf = #{leaf},
+      expanded = #{expanded},
+      display_index = #{displayIndex},
+      is_display = #{isDisplay},
+      en_module_name = #{enModuleName},
+      icon_css = #{iconCss},
+      information = #{information}
+    where module_id = #{moduleId}
+  </update>
+</mapper>

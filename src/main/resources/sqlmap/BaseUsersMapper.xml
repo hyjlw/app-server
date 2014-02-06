@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.icc.app.dao.BaseUsersMapper" >
+  <resultMap id="BaseResultMap" type="org.icc.app.pojo.BaseUsers" >
+    <id column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="real_name" property="realName" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="DECIMAL" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="office_phone" property="officePhone" jdbcType="VARCHAR" />
+    <result column="error_count" property="errorCount" jdbcType="DECIMAL" />
+    <result column="last_login_time" property="lastLoginTime" jdbcType="TIMESTAMP" />
+    <result column="last_login_ip" property="lastLoginIp" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="condition.userId != null" >
+        <![CDATA[ and user_id <> #{condition.userId} ]]>
+      </if>
+      <if test="condition.account != null" >
+         and account = #{condition.account}
+      </if>
+      <if test="condition.password != null" >
+         and password = #{condition.password}
+      </if>
+      <if test="condition.realName != null" >
+         and real_name = #{condition.realName}
+      </if>
+      <if test="condition.realNameLike != null" >
+       <![CDATA[ and real_name LIKE CONCAT(CONCAT('%', #{condition.realNameLike}), '%') ]]>
+      </if>
+      <if test="condition.sex != null" >
+         and sex = #{condition.sex}
+      </if>
+      <if test="condition.email != null" >
+         and email = #{condition.email}
+      </if>
+      <if test="condition.mobile != null" >
+         and mobile = #{condition.mobile}
+      </if>
+      <if test="condition.officePhone != null" >
+         and office_phone = #{condition.officePhone}
+      </if>
+      <if test="condition.errorCount != null" >
+         and error_count = #{condition.errorCount}
+      </if>
+      <if test="condition.lastLoginTime != null" >
+         and last_login_time = #{condition.lastLoginTime}
+      </if>
+      <if test="condition.lastLoginIp != null" >
+         and last_login_ip = #{condition.lastLoginIp}
+      </if>
+      <if test="condition.remark != null" >
+         and remark = #{condition.remark}
+      </if>
+    </trim>
+  </sql>
+  <sql id="Base_Column_List" >
+    user_id, account, password, real_name, sex, email, mobile, office_phone, error_count, 
+    date_format(last_login_time, '%Y-%m-%d %T') last_login_time, last_login_ip, remark
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.icc.app.pojo.Criteria" >
+    <include refid="common.MySQL_Pagination_Head" />
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from base_users
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <include refid="common.MySQL_Pagination_Tail" />
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from base_users
+    where user_id = #{userId}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from base_users
+    where user_id = #{userId}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.icc.app.pojo.Criteria" >
+    delete from base_users
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.icc.app.pojo.BaseUsers" >
+    <selectKey resultType="java.lang.String" keyProperty="userId" order="BEFORE" >
+      select uuid()
+    </selectKey>
+    insert into base_users (user_id, account, password, real_name, sex, email, mobile, 
+      office_phone, error_count, last_login_time, last_login_ip, remark)
+    values (#{userId}, #{account}, #{password}, #{realName}, #{sex}, #{email}, #{mobile}, 
+      #{officePhone}, #{errorCount}, #{lastLoginTime}, #{lastLoginIp}, #{remark})
+  </insert>
+  <insert id="insertSelective" parameterType="org.icc.app.pojo.BaseUsers" >
+    <selectKey resultType="java.lang.String" keyProperty="userId" order="BEFORE" >
+      select uuid()
+    </selectKey>
+    insert into base_users
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      user_id,
+      <if test="account != null" >
+        account,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="realName != null" >
+        real_name,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="officePhone != null" >
+        office_phone,
+      </if>
+      <if test="errorCount != null" >
+        error_count,
+      </if>
+      <if test="lastLoginTime != null" >
+        last_login_time,
+      </if>
+      <if test="lastLoginIp != null" >
+        last_login_ip,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{userId},
+      <if test="account != null" >
+        #{account},
+      </if>
+      <if test="password != null" >
+        #{password},
+      </if>
+      <if test="realName != null" >
+        #{realName},
+      </if>
+      <if test="sex != null" >
+        #{sex},
+      </if>
+      <if test="email != null" >
+        #{email},
+      </if>
+      <if test="mobile != null" >
+        #{mobile},
+      </if>
+      <if test="officePhone != null" >
+        #{officePhone},
+      </if>
+      <if test="errorCount != null" >
+        #{errorCount},
+      </if>
+      <if test="lastLoginTime != null" >
+        #{lastLoginTime},
+      </if>
+      <if test="lastLoginIp != null" >
+        #{lastLoginIp},
+      </if>
+      <if test="remark != null" >
+        #{remark},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.icc.app.pojo.Criteria" resultType="java.lang.Integer" >
+    select count(*) from base_users
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update base_users
+    <set >
+      <if test="record.userId != null" >
+        user_id = #{record.userId},
+      </if>
+      <if test="record.account != null" >
+        account = #{record.account},
+      </if>
+      <if test="record.password != null" >
+        password = #{record.password},
+      </if>
+      <if test="record.realName != null" >
+        real_name = #{record.realName},
+      </if>
+      <if test="record.sex != null" >
+        sex = #{record.sex},
+      </if>
+      <if test="record.email != null" >
+        email = #{record.email},
+      </if>
+      <if test="record.mobile != null" >
+        mobile = #{record.mobile},
+      </if>
+      <if test="record.officePhone != null" >
+        office_phone = #{record.officePhone},
+      </if>
+      <if test="record.errorCount != null" >
+        error_count = #{record.errorCount},
+      </if>
+      <if test="record.lastLoginTime != null" >
+        last_login_time = #{record.lastLoginTime},
+      </if>
+      <if test="record.lastLoginIp != null" >
+        last_login_ip = #{record.lastLoginIp},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update base_users
+    set user_id = #{record.userId},
+      account = #{record.account},
+      password = #{record.password},
+      real_name = #{record.realName},
+      sex = #{record.sex},
+      email = #{record.email},
+      mobile = #{record.mobile},
+      office_phone = #{record.officePhone},
+      error_count = #{record.errorCount},
+      last_login_time = #{record.lastLoginTime},
+      last_login_ip = #{record.lastLoginIp},
+      remark = #{record.remark}
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.icc.app.pojo.BaseUsers" >
+    update base_users
+    <set >
+      <if test="account != null" >
+        account = #{account},
+      </if>
+      <if test="password != null" >
+        password = #{password},
+      </if>
+      <if test="realName != null" >
+        real_name = #{realName},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex},
+      </if>
+      <if test="email != null" >
+        email = #{email},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile},
+      </if>
+      <if test="officePhone != null" >
+        office_phone = #{officePhone},
+      </if>
+      <if test="errorCount != null" >
+        error_count = #{errorCount},
+      </if>
+      <if test="lastLoginTime != null" >
+        last_login_time = #{lastLoginTime},
+      </if>
+      <if test="lastLoginIp != null" >
+        last_login_ip = #{lastLoginIp},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark},
+      </if>
+    </set>
+    where user_id = #{userId}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.icc.app.pojo.BaseUsers" >
+    update base_users
+    set account = #{account},
+      password = #{password},
+      real_name = #{realName},
+      sex = #{sex},
+      email = #{email},
+      mobile = #{mobile},
+      office_phone = #{officePhone},
+      error_count = #{errorCount},
+      last_login_time = #{lastLoginTime},
+      last_login_ip = #{lastLoginIp},
+      remark = #{remark}
+    where user_id = #{userId}
+  </update>
+</mapper>

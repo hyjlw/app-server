@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<mappers>
+		<mapper resource="sqlmap/common_SqlMap.xml" />
+		<mapper resource="sqlmap/BaseModulesMapper.xml" />
+		<mapper resource="sqlmap/BaseRoleModuleMapper.xml" />
+		<mapper resource="sqlmap/BaseRolesMapper.xml" />
+		<mapper resource="sqlmap/BaseUserRoleMapper.xml" />
+		<mapper resource="sqlmap/BaseUsersMapper.xml" />
+		<mapper resource="sqlmap/BaseFieldsMapper.xml" />
+		<mapper resource="sqlmap/WorshipsMapper.xml" />
+		<mapper resource="sqlmap/NewsMapper.xml" />
+	</mappers>
+</configuration>

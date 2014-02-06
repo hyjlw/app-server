@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.icc.app.dao.BaseRolesMapper" >
+  <resultMap id="BaseResultMap" type="org.icc.app.pojo.BaseRoles" >
+    <id column="role_id" property="roleId" jdbcType="VARCHAR" />
+    <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+    <result column="role_desc" property="roleDesc" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="condition.roleNameLike != null" >
+         <![CDATA[ and role_name LIKE CONCAT(CONCAT('%', #{condition.realNameLike}), '%') ]]>
+      </if>
+      <if test="condition.roleName != null" >
+         and role_name = #{condition.roleName}
+      </if>
+      <if test="condition.roleDesc != null" >
+         and role_desc = #{condition.roleDesc}
+      </if>
+    </trim>
+  </sql>
+  <sql id="Base_Column_List" >
+    role_id, role_name, role_desc
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.icc.app.pojo.Criteria" >
+    <include refid="common.MySQL_Pagination_Head" />
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from base_roles
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <include refid="common.MySQL_Pagination_Tail" />
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from base_roles
+    where role_id = #{roleId}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from base_roles
+    where role_id = #{roleId}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.icc.app.pojo.Criteria" >
+    delete from base_roles
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.icc.app.pojo.BaseRoles" >
+    <selectKey resultType="java.lang.String" keyProperty="roleId" order="BEFORE" >
+      select uuid()
+    </selectKey>
+    insert into base_roles (role_id, role_name, role_desc)
+    values (#{roleId}, #{roleName}, #{roleDesc})
+  </insert>
+  <insert id="insertSelective" parameterType="org.icc.app.pojo.BaseRoles" >
+    <selectKey resultType="java.lang.String" keyProperty="roleId" order="BEFORE" >
+      select uuid()
+    </selectKey>
+    insert into base_roles
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      role_id,
+      <if test="roleName != null" >
+        role_name,
+      </if>
+      <if test="roleDesc != null" >
+        role_desc,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{roleId},
+      <if test="roleName != null" >
+        #{roleName},
+      </if>
+      <if test="roleDesc != null" >
+        #{roleDesc},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.icc.app.pojo.Criteria" resultType="java.lang.Integer" >
+    select count(*) from base_roles
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update base_roles
+    <set >
+      <if test="record.roleId != null" >
+        role_id = #{record.roleId},
+      </if>
+      <if test="record.roleName != null" >
+        role_name = #{record.roleName},
+      </if>
+      <if test="record.roleDesc != null" >
+        role_desc = #{record.roleDesc},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update base_roles
+    set role_id = #{record.roleId},
+      role_name = #{record.roleName},
+      role_desc = #{record.roleDesc}
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.icc.app.pojo.BaseRoles" >
+    update base_roles
+    <set >
+      <if test="roleName != null" >
+        role_name = #{roleName},
+      </if>
+      <if test="roleDesc != null" >
+        role_desc = #{roleDesc},
+      </if>
+    </set>
+    where role_id = #{roleId}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.icc.app.pojo.BaseRoles" >
+    update base_roles
+    set role_name = #{roleName},
+      role_desc = #{roleDesc}
+    where role_id = #{roleId}
+  </update>
+</mapper>

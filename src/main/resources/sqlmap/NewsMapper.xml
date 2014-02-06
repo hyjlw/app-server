@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.icc.app.dao.NewsMapper" >
+  <resultMap id="BaseResultMap" type="org.icc.app.pojo.NewsExt" >
+    <id column="id" property="id" jdbcType="DECIMAL" />
+    <result column="parent_id" property="parent_id" jdbcType="DECIMAL" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="domain" property="domain" jdbcType="VARCHAR" />
+    <result column="encoding" property="encoding" jdbcType="VARCHAR" />
+    <result column="rss_encoding" property="rss_encoding" jdbcType="VARCHAR" />
+    <result column="regex_img" property="regex_img" jdbcType="VARCHAR" />
+    <result column="regex_content" property="regex_content" jdbcType="VARCHAR" />
+    <result column="regex_content_filter" property="regex_content_filter" jdbcType="VARCHAR" />
+    <result column="regex_url_node" property="regex_url_node" jdbcType="VARCHAR" />
+    <result column="regex_url_node_full" property="regex_url_node_full" jdbcType="VARCHAR" />
+    <result column="rss_url" property="rss_url" jdbcType="VARCHAR" />
+    <result column="is_mobile" property="is_mobile" jdbcType="VARCHAR" />
+    <result column="path_node" property="path_node" jdbcType="VARCHAR" />
+    <result column="path_link" property="path_link" jdbcType="VARCHAR" />
+    <result column="path_description" property="path_description" jdbcType="VARCHAR" />
+    <result column="path_thumbnail" property="path_thumbnail" jdbcType="VARCHAR" />
+     <result column="enabled" property="enabled" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Example_Where_Clause" >
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="condition.id != null" >
+         and id = #{condition.id}
+      </if>
+      <if test="condition.titleLike != null" >
+       <![CDATA[ and title LIKE CONCAT(CONCAT('%', #{condition.titleLike}), '%') ]]>
+      </if>
+      <if test="condition.title != null" >
+         and title = #{condition.title}
+      </if>
+      <if test="condition.parent != null" >
+         and parent_id is null
+      </if>
+    </trim>
+  </sql>
+  
+  <sql id="Base_Column_List" >
+    `id`,
+    `parent_id`,
+	`title`,
+	`domain`,
+	`encoding`,
+	`regex_img`,
+	`regex_content`,
+	`regex_content_filter`,
+	`regex_url_node`,
+	`regex_url_node_full`,
+	`rss_url`,
+	`is_mobile`,
+	`path_node`,
+	`path_link`,
+	`path_description`,
+	`path_thumbnail`,
+	`enabled`,
+	`sort`
+  </sql>
+  
+  <sql id="Select_Column_List" >
+    `id`,
+	`title`,
+	`domain`,
+	`encoding`,
+	`rss_encoding`,
+	urlencode(`regex_img`) AS `regex_img`,
+	urlencode(`regex_content`) AS `regex_content`,
+	urlencode(`regex_content_filter`) AS `regex_content_filter`,
+	urlencode(`regex_url_node`) AS `regex_url_node`,
+	urlencode(`regex_url_node_full`) AS `regex_url_node_full`,
+	`rss_url`,
+	`is_mobile`,
+	`path_node`,
+	`path_link`,
+	`path_description`,
+	`path_thumbnail`
+  </sql>
+  
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.icc.app.pojo.Criteria" >
+    <include refid="common.MySQL_Pagination_Head" />
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from `tb_news`
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <include refid="common.MySQL_Pagination_Tail" />
+  </select>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from `tb_news`
+    where `id` = #{id}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from `tb_news` where `id` = #{id}
+  </delete>
+  
+  <insert id="insert" parameterType="org.icc.app.pojo.News" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="BEFORE" >
+      select nextval('News')
+    </selectKey>
+    insert into `tb_news` (
+    	<include refid="Base_Column_List" />
+    )
+    values (
+    #{id}, #{name}, #{content}, #{remark}
+    )
+  </insert>
+  
+  <select id="countByExample" parameterType="org.icc.app.pojo.Criteria" resultType="java.lang.Integer" >
+    select count(*) from `tb_news`
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  
+  <update id="updateByPrimaryKey" parameterType="org.icc.app.pojo.BaseModules" >
+    update `tb_news`
+    set
+    `parent_id` = #{parent_id},
+	`title` = #{title},
+	`domain` = #{domain},
+	`encoding` = #{encoding},
+	`regex_img` = #{regex_img},
+	`regex_content` = #{regex_content},
+	`regex_content_filter` = #{regex_content_filter},
+	`regex_url_node` = #{regex_url_node},
+	`regex_url_node_full` = #{regex_url_node_full},
+	`rss_url` = #{rss_url},
+	`is_mobile` = #{is_mobile},
+	`path_node` = #{path_node},
+	`path_link` = #{path_link},
+	`path_description` = #{path_description},
+	`path_thumbnail` = #{path_thumbnail},
+	`enabled` = #{enabled},
+	`sort` = #{sort}
+    where `id` = #{id}
+  </update>
+  
+    <select id="selectAllNews" resultMap="getAllNewsMap"> 
+    	select
+	    	<include refid="Select_Column_List" />
+	    from `tb_news`
+	    where `enabled` = 1
+	    order by `sort`, `id`
+	</select> 
+	<resultMap type="org.icc.app.pojo.News" id="getAllNewsMap"> 
+		<id column="id" property="id" jdbcType="DECIMAL" />
+	    <result column="title" property="title" jdbcType="VARCHAR" />
+	    <result column="domain" property="domain" jdbcType="VARCHAR" />
+	    <result column="encoding" property="encoding" jdbcType="VARCHAR" />
+	    <result column="rss_encoding" property="rss_encoding" jdbcType="VARCHAR" />
+	    <result column="regex_img" property="regex_img" jdbcType="VARCHAR" />
+	    <result column="regex_content" property="regex_content" jdbcType="VARCHAR" />
+	    <result column="regex_content_filter" property="regex_content_filter" jdbcType="VARCHAR" />
+	    <result column="regex_url_node" property="regex_url_node" jdbcType="VARCHAR" />
+	    <result column="regex_url_node_full" property="regex_url_node_full" jdbcType="VARCHAR" />
+	    <result column="rss_url" property="rss_url" jdbcType="VARCHAR" />
+	    <result column="is_mobile" property="is_mobile" jdbcType="VARCHAR" />
+	    <result column="path_node" property="path_node" jdbcType="VARCHAR" />
+	    <result column="path_link" property="path_link" jdbcType="VARCHAR" />
+	    <result column="path_description" property="path_description" jdbcType="VARCHAR" />
+	    <result column="path_thumbnail" property="path_thumbnail" jdbcType="VARCHAR" />
+		<collection property="children" column="id" select="getSubNewsByParentId"/> 
+	</resultMap> 
+	<select id="getSubNewsByParentId" parameterType="Integer" resultType="org.icc.app.pojo.News"> 
+	    select
+	    	<include refid="Select_Column_List" />
+	    from `tb_news`
+	    where `enabled` = 1
+	    and `parent_id` = #{id}
+	    order by `sort`, `id` 
+	</select> 
+</mapper>
