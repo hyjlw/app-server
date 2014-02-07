@@ -405,7 +405,7 @@ news.delFun = function() {
 				if (btn == 'yes') {
 					// 发送请求
 					Share.AjaxRequest({
-								url : news.del + record.data.fieldId,
+								url : news.del + record.data.id,
 								callback : function(json) {
 									news.alwaysFun();
 									news.store.reload();
