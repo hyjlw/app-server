@@ -2,17 +2,17 @@
 <%@ include file="/WEB-INF/views/commons/taglibs.jsp"%>
 <div id="editUserDiv" style="width: 100%; height: 100%;">
 	<div id="editUserToolBarDiv"></div>
-	<div id="editUserFormDiv""></div>
+	<div id="editUserFormDiv"></div>
 </div>
 
 <script type="text/javascript">
-	//yepnope("${ctx}/resources/js/user/myinfo.js");
+	
 	Ext.ns("Ext.Authority.myinfo"); // 自定义一个命名空间
 	myinfo = Ext.Authority.myinfo; // 定义命名空间的别名
 	myinfo = {
 		save : ctx + "/user/myinfo",
-		THEME: eval('(${fields.theme==null?"{}":fields.theme})'),//注意括号
-		SEX: eval('(${fields.sex==null?"{}":fields.sex})')//注意括号
+		THEME: eval('(${fields.theme==null?"{}":fields.theme})'),
+		SEX: eval('(${fields.sex==null?"{}":fields.sex})')
 	};
 	myinfo.themeComboBox = new Ext.form.ComboBox({
 		hiddenName : 'theme',
@@ -42,23 +42,6 @@
 		}
 	};
 	myinfo.setTheme();
-	/* myinfo.sexradiogroup = new Ext.form.RadioGroup({
-		fieldLabel : '性别',
-		allowBlank : false,
-		name : 'sex',
-		value : '${user.sex}',
-		items : [ {
-			boxLabel : '男',
-			name : 'sex',
-			checked : true,
-			inputValue : 0
-		}, {
-			boxLabel : '女',
-			name : 'sex',
-			inputValue : 1
-		} ],
-		anchor : '99%'
-	}); */
 	myinfo.sexCombo = new Ext.form.ComboBox({
 		fieldLabel : '性别',
 		hiddenName : 'sex',
