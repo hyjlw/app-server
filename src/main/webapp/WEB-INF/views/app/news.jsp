@@ -194,7 +194,7 @@ news.deleteAction = new Ext.Action({
 /** 查询 */
 news.searchField = new Ext.ux.form.SearchField({
 			store : news.store,
-			paramName : 'titleName',
+			paramName : 'name',
 			emptyText : '请输入字段名称',
 			style : 'margin-left: 5px;'
 		});
