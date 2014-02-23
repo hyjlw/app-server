@@ -86,8 +86,8 @@ public class NewsTypeServiceImpl implements NewsTypeService {
 		}
 		
 		String val = JackJson.fromObjectToJson(parentsMap).replaceAll("\\'", "\\\\'");
-		logger.info("sites value: " + val);
-		map.put("sites", val);
+		logger.info("types value: " + val);
+		map.put("types", val);
 		
 		return map;
 	}

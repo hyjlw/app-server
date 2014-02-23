@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="org.icc.app.dao.SiteMapper" >
-  <resultMap id="BaseResultMap" type="org.icc.app.pojo.Site" >
+<mapper namespace="org.icc.app.dao.WebPageMapper" >
+  <resultMap id="BaseResultMap" type="org.icc.app.pojo.WebPage" >
     <id column="id" property="id" jdbcType="DECIMAL" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="site_url" property="siteUrl" jdbcType="VARCHAR" />
+    <result column="site_id" property="siteId" jdbcType="DECIMAL" />
+    <result column="type_id" property="typeId" jdbcType="DECIMAL" />
+    <result column="web_url" property="webUrl" jdbcType="VARCHAR" />
     <result column="create_date" property="createDate" jdbcType="VARCHAR" />
   </resultMap>
   
@@ -14,25 +15,24 @@
          and id = #{condition.id}
       </if>
       <if test="condition.titleLike != null" >
-       <![CDATA[ and name LIKE CONCAT(CONCAT('%', #{condition.nameLike}), '%') ]]>
-      </if>
-      <if test="condition.siteUrl != null" >
-         and site_url = #{condition.siteUrl}
+       <![CDATA[ and web_url LIKE CONCAT(CONCAT('%', #{condition.webUrlLike}), '%') ]]>
       </if>
     </trim>
   </sql>
   
   <sql id="Base_Column_List" >
     `id`,
-    `name`,
-	`site_url`,
+    `site_id`,
+    `type_id`,
+	`web_url`,
 	`create_date`
   </sql>
   
   <sql id="Select_Column_List" >
     `id`,
-	`name`,
-	`site_url` AS `siteUrl`,
+	`site_id` AS `siteId`,
+	`type_id` AS `typeId`,
+	`web_url` AS `webUrl`,
 	DATE_FORMAT(`create_date`, '%m/%d/%Y %T') AS `createDate`
   </sql>
   
@@ -43,7 +43,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from `tb_sites`
+    from `tb_web_pages`
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -57,45 +57,46 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from `tb_sites`
+    from `tb_web_pages`
     where `id` = #{id}
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from `tb_sites` where `id` = #{id}
+    delete from `tb_web_pages` where `id` = #{id}
   </delete>
   
-  <insert id="insert" parameterType="org.icc.app.pojo.News" >
+  <insert id="insert" parameterType="org.icc.app.pojo.WebPage" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="BEFORE" >
-      select nextval('Site')
+      select nextval('WebPage')
     </selectKey>
-    insert into `tb_sites` (
+    insert into `tb_web_pages` (
     	<include refid="Base_Column_List" />
     )
     values (
-    #{id}, #{name}, #{siteUrl}, STR_TO_DATE(#{createDate}, '%m/%d/%Y %T')
+    #{id}, #{siteId}, #{typeId}, #{webUrl}, STR_TO_DATE(#{createDate}, '%m/%d/%Y %T')
     )
   </insert>
   
   <select id="countByExample" parameterType="org.icc.app.pojo.Criteria" resultType="java.lang.Integer" >
-    select count(*) from `tb_sites`
+    select count(*) from `tb_web_pages`
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   
-  <update id="updateByPrimaryKey" parameterType="org.icc.app.pojo.Site" >
-    update `tb_sites`
+  <update id="updateByPrimaryKey" parameterType="org.icc.app.pojo.WebPage" >
+    update `tb_web_pages`
     set
-    `name` = #{name},
-	`site_url` = #{siteUrl}
+    `site_id` = #{site_id},
+    `type_id` = #{type_id},
+	`web_url` = #{webUrl}
     where `id` = #{id}
   </update>
   
-    <select id="selectAll" resultType="org.icc.app.pojo.Site"> 
+    <select id="selectAll" resultType="org.icc.app.pojo.WebPage"> 
     	select
 	    	<include refid="Select_Column_List" />
-	    from `tb_sites`
+	    from `tb_web_pages`
 	</select> 
 
 </mapper>

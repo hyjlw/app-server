@@ -3,157 +3,157 @@
 <div id="${param.id}"></div>
 
 <script type="text/javascript">
-Ext.ns("Ext.Authority.type"); // 自定义一个命名空间
-type = Ext.Authority.type; // 定义命名空间的别名
-type = {
-	all : ctx + '/type/all',// 加载所有
-	save : ctx + "/type/save",//保存
-	del : ctx + "/type/del/",//删除
+Ext.ns("Ext.Authority.page"); // 自定义一个命名空间
+page = Ext.Authority.page; // 定义命名空间的别名
+page = {
+	all : ctx + '/page/all',// 加载所有
+	save : ctx + "/page/save",//保存
+	del : ctx + "/page/del/",//删除
 	ENABLED : eval('(${fields.enabled==null?"{}":fields.enabled})'),
 	pagesizes:eval('(${fields.pagesizes==null?"{}":fields.pagesizes})'),
+	sites:eval('(${fields.sites==null?"{}":fields.sites})'),
+	types:eval('(${fields.types==null?"{}":fields.types})'),
 	pageSize : 20 // 每页显示的记录数
 };
 /** 改变页的combo */
-type.pageSizeCombo = new Share.pageSizeCombo({
+page.pageSizeCombo = new Share.pageSizeCombo({
 			value : '20',
 			listeners : {
 				select : function(comboBox) {
-					type.pageSize = parseInt(comboBox.getValue());
-					type.bbar.pageSize = parseInt(comboBox.getValue());
-					type.store.baseParams.limit = type.pageSize;
-					type.store.baseParams.start = 0;
-					type.store.load();
+					page.pageSize = parseInt(comboBox.getValue());
+					page.bbar.pageSize = parseInt(comboBox.getValue());
+					page.store.baseParams.limit = page.pageSize;
+					page.store.baseParams.start = 0;
+					page.store.load();
 				}
 			}
 		});
 // 覆盖已经设置的。具体设置以当前页面的pageSizeCombo为准
-type.pageSize = parseInt(type.pageSizeCombo.getValue());
+page.pageSize = parseInt(page.pageSizeCombo.getValue());
 /** 基本信息-数据源 */
-type.store = new Ext.data.Store({
+page.store = new Ext.data.Store({
 			autoLoad : true,
 			remoteSort : true,
 			baseParams : {
 				start : 0,
-				limit : type.pageSize
+				limit : page.pageSize
 			},
 			proxy : new Ext.data.HttpProxy({// 获取数据的方式
 				method : 'POST',
-				url : type.all
+				url : page.all
 			}),
 			reader : new Ext.data.JsonReader({// 数据读取器
 				totalProperty : 'results', // 记录总数
 				root : 'rows' // Json中的列表数据根节点
-			}, ['id', 'name', 'enabled', 'isSubscribe', 'createDate']),
+			}, ['id', 'siteId', 'typeId', 'webUrl', 'createDate']),
 			listeners : {
 				'load' : function(store, records, options) {
-					type.alwaysFun();
+					page.alwaysFun();
 				}
 			}
 		});
 /** 基本信息-选择模式 */
-type.selModel = new Ext.grid.CheckboxSelectionModel({
+page.selModel = new Ext.grid.CheckboxSelectionModel({
 			singleSelect : true,
 			listeners : {
 				'rowselect' : function(selectionModel, rowIndex, record) {
-					type.deleteAction.enable();
-					type.editAction.enable();
+					page.deleteAction.enable();
+					page.editAction.enable();
 				},
 				'rowdeselect' : function(selectionModel, rowIndex, record) {
-					type.alwaysFun();
+					page.alwaysFun();
 				}
 			}
 		});
 /** 基本信息-数据列 */
-type.colModel = new Ext.grid.ColumnModel({
+page.colModel = new Ext.grid.ColumnModel({
 			defaults : {
 				sortable : true,
 				width : 240
 			},
-			columns : [type.selModel, {
+			columns : [page.selModel, {
 						hidden : true,
 						header : '字段ID',
 						dataIndex : 'id'
 					}, {
-						header : '名称',
-						dataIndex : 'name'
-					}, {
-						header : '启用',
-						dataIndex : 'enabled',
+						header : '站点',
+						dataIndex : 'siteId',
 						renderer : function(v) {
-							return Share.map(v,type.ENABLED , '');
+							return Share.map(v,page.sites , '');
 						}
-						
 					}, {
-						header : '订阅',
-						dataIndex : 'isSubscribe',
+						header : '类型',
+						dataIndex : 'typeId',
 						renderer : function(v) {
-							return Share.map(v,type.ENABLED , '');
+							return Share.map(v,page.types , '');
 						}
-						
+					}, {
+						header : '地址',
+						dataIndex : 'webUrl'						
 					}, {
 						header : '日期',
 						dataIndex : 'createDate'
 					}]
 		});
 /** 新建 */
-type.addAction = new Ext.Action({
+page.addAction = new Ext.Action({
 			text : '新建',
 			iconCls : 'field_add',
 			handler : function() {
-				type.addWindow.setIconClass('field_add'); // 设置窗口的样式
-				type.addWindow.setTitle('新建类型'); // 设置窗口的名称
-				type.addWindow.show().center(); // 显示窗口
-				type.formPanel.getForm().reset(); // 清空表单里面的元素的值.
-				type.enabledCombo.clearValue();
+				page.addWindow.setIconClass('field_add'); // 设置窗口的样式
+				page.addWindow.setTitle('新建页'); // 设置窗口的名称
+				page.addWindow.show().center(); // 显示窗口
+				page.formPanel.getForm().reset(); // 清空表单里面的元素的值.
+				page.enabledCombo.clearValue();
 			}
 		});
 /** 编辑 */
-type.editAction = new Ext.Action({
+page.editAction = new Ext.Action({
 			text : '编辑',
 			iconCls : 'field_edit',
 			disabled : true,
 			handler : function() {
-				var record = type.grid.getSelectionModel().getSelected();
-				type.addWindow.setIconClass('field_edit'); // 设置窗口的样式
-				type.addWindow.setTitle('编辑类型'); // 设置窗口的名称
-				type.addWindow.show().center();
-				type.formPanel.getForm().reset();
-				type.formPanel.getForm().loadRecord(record);
+				var record = page.grid.getSelectionModel().getSelected();
+				page.addWindow.setIconClass('field_edit'); // 设置窗口的样式
+				page.addWindow.setTitle('编辑页'); // 设置窗口的名称
+				page.addWindow.show().center();
+				page.formPanel.getForm().reset();
+				page.formPanel.getForm().loadRecord(record);
 			}
 		});
 /** 删除 */
-type.deleteAction = new Ext.Action({
+page.deleteAction = new Ext.Action({
 			text : '删除',
 			iconCls : 'field_delete',
 			disabled : true,
 			handler : function() {
-				type.delFun();
+				page.delFun();
 			}
 		});
 /** 查询 */
-type.searchField = new Ext.ux.form.SearchField({
-			store : type.store,
-			paramName : 'name',
+page.searchField = new Ext.ux.form.SearchField({
+			store : page.store,
+			paramName : 'webUrl',
 			emptyText : '请输入字段名称',
 			style : 'margin-left: 5px;'
 		});
 /** 顶部工具栏 */
-type.tbar = [type.addAction, '-', type.editAction, '-',
-		type.deleteAction, '-', type.searchField];
+page.tbar = [page.addAction, '-', page.editAction, '-',
+		page.deleteAction, '-', page.searchField];
 /** 底部工具条 */
-type.bbar = new Ext.PagingToolbar({
-			pageSize : type.pageSize,
-			store : type.store,
+page.bbar = new Ext.PagingToolbar({
+			pageSize : page.pageSize,
+			store : page.store,
 			displayInfo : true,
-			items : ['-', '&nbsp;', type.pageSizeCombo]
+			items : ['-', '&nbsp;', page.pageSizeCombo]
 		});
 /** 基本信息-表格 */
-type.grid = new Ext.grid.GridPanel({
-			store : type.store,
-			colModel : type.colModel,
-			selModel : type.selModel,
-			tbar : type.tbar,
-			bbar : type.bbar,
+page.grid = new Ext.grid.GridPanel({
+			store : page.store,
+			colModel : page.colModel,
+			selModel : page.selModel,
+			tbar : page.tbar,
+			bbar : page.bbar,
 			autoScroll : 'auto',
 			region : 'center',
 			loadMask : true,
@@ -163,15 +163,15 @@ type.grid = new Ext.grid.GridPanel({
 		});
 		
 
-type.enabledCombo = new Ext.form.ComboBox({
-	fieldLabel : '是否启用',
-	hiddenName : 'enabled',
-	name : 'enabled',
+page.siteCombo = new Ext.form.ComboBox({
+	fieldLabel : '站点',
+	hiddenName : 'siteId',
+	name : 'siteId',
 	triggerAction : 'all',
 	mode : 'local',
 	store : new Ext.data.ArrayStore({
 				fields : ['v', 't'],
-				data : Share.map2Ary(type.ENABLED)
+				data : Share.map2Ary(page.sites)
 			}),
 	valueField : 'v',
 	displayField : 't',
@@ -180,15 +180,15 @@ type.enabledCombo = new Ext.form.ComboBox({
 	anchor : '99%'
 });
 
-type.subscribeCombo = new Ext.form.ComboBox({
-	fieldLabel : '是否订阅',
-	hiddenName : 'isSubscribe',
-	name : 'isSubscribe',
+page.typeCombo = new Ext.form.ComboBox({
+	fieldLabel : '类型',
+	hiddenName : 'typeId',
+	name : 'typeId',
 	triggerAction : 'all',
 	mode : 'local',
 	store : new Ext.data.ArrayStore({
 				fields : ['v', 't'],
-				data : Share.map2Ary(type.ENABLED)
+				data : Share.map2Ary(page.types)
 			}),
 	valueField : 'v',
 	displayField : 't',
@@ -198,7 +198,7 @@ type.subscribeCombo = new Ext.form.ComboBox({
 });
 
 /** 基本信息-详细信息的form */
-type.formPanel = new Ext.form.FormPanel({
+page.formPanel = new Ext.form.FormPanel({
 			frame : false,
 			title : '字段信息',
 			bodyStyle : 'padding:10px;border:0px',
@@ -209,17 +209,18 @@ type.formPanel = new Ext.form.FormPanel({
 						fieldLabel : 'ID',
 						name : 'id',
 						anchor : '99%'
-					}, {
-						fieldLabel : '名称',
-						maxLength : 64,
+					}, page.siteCombo, page.typeCombo,
+					{
+						fieldLabel : '地址',
+						maxLength : 128,
 						allowBlank : false,
-						name : 'name',
+						name : 'webUrl',
 						anchor : '99%'
-					}, type.enabledCombo, type.subscribeCombo
+					}
 					]
 		});
 /** 编辑新建窗口 */
-type.addWindow = new Ext.Window({
+page.addWindow = new Ext.Window({
 			layout : 'fit',
 			width : 420,
 			height : 240,
@@ -227,16 +228,16 @@ type.addWindow = new Ext.Window({
 			plain : true,
 			modal : true,
 			resizable : true,
-			items : [type.formPanel],
+			items : [page.formPanel],
 			buttons : [{
 						text : '保存',
 						handler : function() {
-							type.saveFun();
+							page.saveFun();
 						}
 					}, {
 						text : '重置',
 						handler : function() {
-							var form = type.formPanel.getForm();
+							var form = page.formPanel.getForm();
 							var id = form.findField("id").getValue();
 							form.reset();
 							if (id != '')
@@ -244,48 +245,48 @@ type.addWindow = new Ext.Window({
 						}
 					}]
 		});
-type.alwaysFun = function() {
-	Share.resetGrid(type.grid);
-	type.deleteAction.disable();
-	type.editAction.disable();
+page.alwaysFun = function() {
+	Share.resetGrid(page.grid);
+	page.deleteAction.disable();
+	page.editAction.disable();
 };
-type.saveFun = function() {
-	var form = type.formPanel.getForm();
+page.saveFun = function() {
+	var form = page.formPanel.getForm();
 	if (!form.isValid()) {
 		return;
 	}
 	// 发送请求
 	Share.AjaxRequest({
-				url : type.save,
+				url : page.save,
 				params : form.getValues(),
 				callback : function(json) {
-					type.addWindow.hide();
-					type.alwaysFun();
-					type.store.reload();
+					page.addWindow.hide();
+					page.alwaysFun();
+					page.store.reload();
 				}
 			});
 };
-type.delFun = function() {
-	var record = type.grid.getSelectionModel().getSelected();
+page.delFun = function() {
+	var record = page.grid.getSelectionModel().getSelected();
 	Ext.Msg.confirm('提示', '确定要删除这条记录吗?', function(btn, text) {
 				if (btn == 'yes') {
 					// 发送请求
 					Share.AjaxRequest({
-								url : type.del + record.data.id,
+								url : page.del + record.data.id,
 								callback : function(json) {
-									type.alwaysFun();
-									type.store.reload();
+									page.alwaysFun();
+									page.store.reload();
 								}
 							});
 				}
 			});
 };
-type.myPanel = new Ext.Panel({
+page.myPanel = new Ext.Panel({
 			id : '${param.id}' + '_panel',
 			renderTo : '${param.id}',
 			layout : 'border',
 			boder : false,
 			height : index.tabPanel.getInnerHeight() - 1,
-			items : [type.grid]
+			items : [page.grid]
 		});
 </script>

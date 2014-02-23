@@ -48,7 +48,7 @@ public class NewsController {
 	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public String index() {
-		return "app/news";
+		return "news/news";
 	}
 
 	/**
