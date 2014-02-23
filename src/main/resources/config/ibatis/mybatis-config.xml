@@ -11,5 +11,7 @@
 		<mapper resource="sqlmap/BaseFieldsMapper.xml" />
 		<mapper resource="sqlmap/WorshipsMapper.xml" />
 		<mapper resource="sqlmap/NewsMapper.xml" />
+		<mapper resource="sqlmap/SiteMapper.xml" />
+		<mapper resource="sqlmap/NewsTypeMapper.xml" />
 	</mappers>
 </configuration>

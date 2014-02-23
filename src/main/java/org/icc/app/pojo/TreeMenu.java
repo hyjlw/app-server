@@ -77,7 +77,7 @@ public class TreeMenu {
 		Iterator<BaseModules> it = list.iterator();
 		while (it.hasNext()) {
 			BaseModules temp = (BaseModules) it.next();
-			if (temp.getParentId() == modules.getModuleId()) {
+			if (temp.getParentId().equals(modules.getModuleId())) {
 				li.add(temp);
 			}
 		}

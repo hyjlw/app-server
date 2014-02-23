@@ -76,15 +76,25 @@
 			<mvc:mapping path="/provider**/**" />
 			<mvc:mapping path="/worship**/**" />
 			<mvc:mapping path="/news**/**" />
+			<mvc:mapping path="/site**/**" />
+			<mvc:mapping path="/type**/**" />
 			<bean class="org.icc.app.web.interseptor.LoginInterceptor"></bean>
 		</mvc:interceptor>
 	</mvc:interceptors>
 
 	<!--开发期间注释掉，上线后启用 错误解析器 发生错误默认会跳转到/web-inf/views/timeout.jsp -->
-	<!-- <bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver"> <property name="defaultErrorView" 
-		value="timeout" /> <property name="exceptionMappings"> <props> <prop key="java.sql.SQLException">timeout</prop> <prop key="java.lang.RuntimeException">timeout</prop> 
-		<prop key="org.springframework.transaction.TransactionException">timeout</prop> <prop key="org.springframework.dao.DataAccessException">timeout</prop> 
-		</props> </property> </bean> -->
+	<bean id="exceptionResolver"
+		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="defaultErrorView" value="timeout" />
+		<property name="exceptionMappings">
+			<props>
+				<prop key="java.sql.SQLException">timeout</prop>
+				<prop key="java.lang.RuntimeException">timeout</prop>
+				<prop key="org.springframework.transaction.TransactionException">timeout</prop>
+				<prop key="org.springframework.dao.DataAccessException">timeout</prop>
+			</props>
+		</property>
+	</bean>
 
 	<!-- 国际化,并且可以批定文件编码,可以使用classpath: 或者WEB-INF/ 前缀 -->
 	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">

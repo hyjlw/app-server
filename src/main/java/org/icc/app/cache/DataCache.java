@@ -5,18 +5,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.icc.app.pojo.News;
 import org.icc.app.util.PropertiesLoader;
 
-public class DataCache {
+public class DataCache<T> {
 	private static DataCache cache;
-	private Map<String, List<News>> map;
+	private Map<String, List<T>> map;
 	private Map<String, Long> timeMap;
 	
 	private String latestDate = "";
 	
 	private DataCache() {
-		map = new HashMap<String, List<News>>();
+		map = new HashMap<String, List<T>>();
 		timeMap = new HashMap<String, Long>();
 	}
 	
@@ -29,7 +28,7 @@ public class DataCache {
 		}
 	}
 	
-	public List<News> getCacheData() {
+	public List<T> getCacheData() {
 		synchronized(DataCache.class) {
 			if(timeout(latestDate)) {
 				map.remove(latestDate);
@@ -39,7 +38,7 @@ public class DataCache {
 		}
 	}
 	
-	public void cacheData(String latestDate, List<News> data) {
+	public void cacheData(String latestDate, List<T> data) {
 		synchronized(DataCache.class) {
 			map.put(latestDate, data);
 			timeMap.put(latestDate, new Date().getTime());

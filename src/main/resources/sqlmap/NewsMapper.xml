@@ -87,7 +87,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from `tb_news`
+    from `tb_news_categories`
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -101,19 +101,19 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from `tb_news`
+    from `tb_news_categories`
     where `id` = #{id}
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from `tb_news` where `id` = #{id}
+    delete from `tb_news_categories` where `id` = #{id}
   </delete>
   
   <insert id="insert" parameterType="org.icc.app.pojo.News" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="BEFORE" >
       select nextval('News')
     </selectKey>
-    insert into `tb_news` (
+    insert into `tb_news_categories` (
     	<include refid="Base_Column_List" />
     )
     values (
@@ -122,14 +122,14 @@
   </insert>
   
   <select id="countByExample" parameterType="org.icc.app.pojo.Criteria" resultType="java.lang.Integer" >
-    select count(*) from `tb_news`
+    select count(*) from `tb_news_categories`
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   
-  <update id="updateByPrimaryKey" parameterType="org.icc.app.pojo.BaseModules" >
-    update `tb_news`
+  <update id="updateByPrimaryKey" parameterType="org.icc.app.pojo.News" >
+    update `tb_news_categories`
     set
     `parent_id` = #{parent_id},
 	`title` = #{title},
@@ -154,7 +154,7 @@
     <select id="selectAllNews" resultMap="getAllNewsMap"> 
     	select
 	    	<include refid="Select_Column_List" />
-	    from `tb_news`
+	    from `tb_news_categories`
 	    where `enabled` = 1
 	    order by `sort`, `id`
 	</select> 
@@ -180,7 +180,7 @@
 	<select id="getSubNewsByParentId" parameterType="Integer" resultType="org.icc.app.pojo.News"> 
 	    select
 	    	<include refid="Select_Column_List" />
-	    from `tb_news`
+	    from `tb_news_categories`
 	    where `enabled` = 1
 	    and `parent_id` = #{id}
 	    order by `sort`, `id` 

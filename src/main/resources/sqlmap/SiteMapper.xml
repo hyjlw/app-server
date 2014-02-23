@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="org.icc.app.dao.WorshipsMapper" >
-  <resultMap id="BaseResultMap" type="org.icc.app.pojo.Worship" >
+<mapper namespace="org.icc.app.dao.SiteMapper" >
+  <resultMap id="BaseResultMap" type="org.icc.app.pojo.Site" >
     <id column="id" property="id" jdbcType="DECIMAL" />
     <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="content" property="content" jdbcType="VARCHAR" />
-    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="site_url" property="siteUrl" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="VARCHAR" />
   </resultMap>
   
   <sql id="Example_Where_Clause" >
@@ -13,17 +13,27 @@
       <if test="condition.id != null" >
          and id = #{condition.id}
       </if>
-      <if test="condition.nameLike != null" >
+      <if test="condition.titleLike != null" >
        <![CDATA[ and name LIKE CONCAT(CONCAT('%', #{condition.nameLike}), '%') ]]>
       </if>
-      <if test="condition.name != null" >
-         and name = #{condition.name}
+      <if test="condition.siteUrl != null" >
+         and site_url = #{condition.siteUrl}
       </if>
     </trim>
   </sql>
   
   <sql id="Base_Column_List" >
-    `id`, `name`, `content`, `remark`
+    `id`,
+    `name`,
+	`site_url`,
+	`create_date`
+  </sql>
+  
+  <sql id="Select_Column_List" >
+    `id`,
+	`name`,
+	`site_url` AS `siteUrl`,
+	DATE_FORMAT(`create_date`, '%m/%d/%Y %T') AS `createDate`
   </sql>
   
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.icc.app.pojo.Criteria" >
@@ -33,7 +43,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from `tb_worships`
+    from `tb_sites`
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -47,38 +57,45 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from `tb_worships`
+    from `tb_sites`
     where `id` = #{id}
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from `tb_worships` where `id` = #{id}
+    delete from `tb_sites` where `id` = #{id}
   </delete>
   
-  <insert id="insert" parameterType="org.icc.app.pojo.Worship" >
+  <insert id="insert" parameterType="org.icc.app.pojo.News" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="BEFORE" >
-      select nextval('Worship')
+      select nextval('Site')
     </selectKey>
-    insert into `tb_worships` (
+    insert into `tb_sites` (
     	<include refid="Base_Column_List" />
     )
     values (
-    #{id}, #{name}, #{content}, #{remark}
+    #{id}, #{name}, #{siteUrl}, STR_TO_DATE(#{createDate}, '%m/%d/%Y %T')
     )
   </insert>
   
   <select id="countByExample" parameterType="org.icc.app.pojo.Criteria" resultType="java.lang.Integer" >
-    select count(*) from `tb_worships`
+    select count(*) from `tb_sites`
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   
-  <update id="updateByPrimaryKey" parameterType="org.icc.app.pojo.Worship" >
-    update `tb_worships`
-    set `name` = #{name},
-      `content` = #{content},
-      `remark` = #{remark}
+  <update id="updateByPrimaryKey" parameterType="org.icc.app.pojo.Site" >
+    update `tb_sites`
+    set
+    `name` = #{name},
+	`site_url` = #{siteUrl}
     where `id` = #{id}
   </update>
+  
+    <select id="selectAllNews" resultType="org.icc.app.pojo.Site"> 
+    	select
+	    	<include refid="Select_Column_List" />
+	    from `tb_sites`
+	</select> 
+
 </mapper>
