@@ -45,7 +45,7 @@ page.store = new Ext.data.Store({
 			reader : new Ext.data.JsonReader({// 数据读取器
 				totalProperty : 'results', // 记录总数
 				root : 'rows' // Json中的列表数据根节点
-			}, ['id', 'siteId', 'typeId', 'webUrl', 'createDate']),
+			}, ['id', 'siteId', 'typeId', 'name', 'webUrl', 'createDate']),
 			listeners : {
 				'load' : function(store, records, options) {
 					page.alwaysFun();
@@ -87,6 +87,9 @@ page.colModel = new Ext.grid.ColumnModel({
 						renderer : function(v) {
 							return Share.map(v,page.types , '');
 						}
+					}, {
+						header : '名称',
+						dataIndex : 'name'						
 					}, {
 						header : '地址',
 						dataIndex : 'webUrl'						
@@ -133,7 +136,7 @@ page.deleteAction = new Ext.Action({
 /** 查询 */
 page.searchField = new Ext.ux.form.SearchField({
 			store : page.store,
-			paramName : 'webUrl',
+			paramName : 'name',
 			emptyText : '请输入字段名称',
 			style : 'margin-left: 5px;'
 		});
@@ -210,6 +213,13 @@ page.formPanel = new Ext.form.FormPanel({
 						name : 'id',
 						anchor : '99%'
 					}, page.siteCombo, page.typeCombo,
+					{
+						fieldLabel : '名称',
+						maxLength : 128,
+						allowBlank : false,
+						name : 'name',
+						anchor : '99%'
+					},
 					{
 						fieldLabel : '地址',
 						maxLength : 128,

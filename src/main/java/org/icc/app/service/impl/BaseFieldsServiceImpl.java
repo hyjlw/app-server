@@ -11,6 +11,10 @@ import org.icc.app.dao.BaseFieldsMapper;
 import org.icc.app.pojo.BaseFields;
 import org.icc.app.pojo.Criteria;
 import org.icc.app.service.BaseFieldsService;
+import org.icc.app.service.NewsService;
+import org.icc.app.service.NewsTypeService;
+import org.icc.app.service.SiteService;
+import org.icc.app.service.WebPageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +26,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class BaseFieldsServiceImpl implements BaseFieldsService {
 	@Autowired
 	private BaseFieldsMapper baseFieldsMapper;
+	
+	@Autowired
+	private NewsService newsServiceImpl;
+	@Autowired
+	private SiteService siteServiceImpl;
+	@Autowired
+	private NewsTypeService newsTypeServiceImpl;
+	@Autowired
+	private WebPageService webPageServiceImpl;
 
 	private static final Logger logger = LoggerFactory.getLogger(BaseFieldsServiceImpl.class);
 
@@ -48,13 +61,11 @@ public class BaseFieldsServiceImpl implements BaseFieldsService {
 			BaseFields baseFields = list.get(i);
 			String key = baseFields.getField();
 			if (all.containsKey(key)) {
-				// 如果包含这个field，就加入它的值
 				part = all.get(key);
 				part.put(baseFields.getValueField(), baseFields.getDisplayField());
 			} else {
 				part = new LinkedHashMap<String, String>();
 				part.put(baseFields.getValueField(), baseFields.getDisplayField());
-				// 没有这个fiel，则新加入这个filed
 				all.put(key, part);
 			}
 		}
@@ -69,6 +80,25 @@ public class BaseFieldsServiceImpl implements BaseFieldsService {
 			part.put(key, val);
 		}
 		logger.info("结束读取系统默认配置");
+		
+		Map<String, String> newsMap = newsServiceImpl.selectAllParents();
+		for(Map.Entry<String, String> e : newsMap.entrySet()) {
+			part.put(e.getKey(), e.getValue());
+		}
+		
+		Map<String, String> sitesMap = siteServiceImpl.selectAllSitesMap();
+		for(Map.Entry<String, String> e : sitesMap.entrySet()) {
+			part.put(e.getKey(), e.getValue());
+		}
+		
+		Map<String, String> newsTypeMap = newsTypeServiceImpl.selectAllTypesMap();
+		for(Map.Entry<String, String> e : newsTypeMap.entrySet()) {
+			part.put(e.getKey(), e.getValue());
+		}
+		Map<String, String> pagesMap = webPageServiceImpl.selectAllPagesMap();
+		for(Map.Entry<String, String> e : pagesMap.entrySet()) {
+			part.put(e.getKey(), e.getValue());
+		}
 		return part;
 	}
 

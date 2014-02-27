@@ -11,6 +11,7 @@ public class WebPage {
 	private Integer id;
 	private Integer siteId;
 	private Integer typeId;
+	private String name;
 	private String webUrl;
 	private String createDate;
 	/**
@@ -48,6 +49,18 @@ public class WebPage {
 	 */
 	public void setTypeId(Integer typeId) {
 		this.typeId = typeId;
+	}
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 	/**
 	 * @return the webUrl

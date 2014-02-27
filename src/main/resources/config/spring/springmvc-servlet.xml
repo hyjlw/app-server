@@ -79,6 +79,7 @@
 			<mvc:mapping path="/site**/**" />
 			<mvc:mapping path="/type**/**" />
 			<mvc:mapping path="/page**/**" />
+			<mvc:mapping path="/article**/**" />
 			<bean class="org.icc.app.web.interseptor.LoginInterceptor"></bean>
 		</mvc:interceptor>
 	</mvc:interceptors>

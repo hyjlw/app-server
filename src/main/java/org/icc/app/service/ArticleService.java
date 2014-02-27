@@ -1,24 +1,23 @@
 package org.icc.app.service;
 
 import java.util.List;
-import java.util.Map;
 
+import org.icc.app.pojo.Article;
 import org.icc.app.pojo.Criteria;
-import org.icc.app.pojo.WebPage;
 
-public interface WebPageService {
+public interface ArticleService {
 	int countByExample(Criteria example);
 
-	List<WebPage> selectByExample(Criteria example);
+	List<Article> selectByExample(Criteria example);
 	
-	List<WebPage> selectAllPages();
+	List<Article> selectAllArticles();
 
 	/**
 	 * 
 	 * @param example
 	 * @return 00：失败，01：成功 ,其他情况
 	 */
-	String saveWebPage(Criteria example);
+	String saveArticle(Criteria example);
 
 	/**
 	 * 
@@ -27,5 +26,5 @@ public interface WebPageService {
 	 */
 	String delete(Criteria example);
 	
-	Map<String, String> selectAllPagesMap();
+
 }

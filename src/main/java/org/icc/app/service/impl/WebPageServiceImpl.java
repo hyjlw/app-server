@@ -1,8 +1,11 @@
 package org.icc.app.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.icc.app.cache.DataCache;
+import org.icc.app.common.jackjson.JackJson;
 import org.icc.app.dao.WebPageMapper;
 import org.icc.app.pojo.Criteria;
 import org.icc.app.pojo.WebPage;
@@ -69,6 +72,24 @@ public class WebPageServiceImpl implements WebPageService {
 			cache.cacheData(DateUtil.getCurrentDate("yyyyMMdd"), list);
 		}
 		return list;
+	}
+
+	@Override
+	public Map<String, String> selectAllPagesMap() {
+		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> parentsMap = new HashMap<String, String>();
+		
+		Criteria example = new Criteria();
+		List<WebPage> pages = pageMapper.selectByExample(example);
+		for(WebPage p : pages) {
+			parentsMap.put(p.getId().toString(), p.getName());
+		}
+		
+		String val = JackJson.fromObjectToJson(parentsMap).replaceAll("\\'", "\\\\'");
+		logger.info("pages value: " + val);
+		map.put("pages", val);
+		
+		return map;
 	}
 
 }

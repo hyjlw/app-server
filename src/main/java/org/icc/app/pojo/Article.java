@@ -11,6 +11,7 @@ public class Article {
 	private Integer id;
 	private Integer webId;
 	private String webUrl;
+	private String title;
 	private String content;
 	private String subscriber;
 	private String subscribeDate;
@@ -50,6 +51,12 @@ public class Article {
 	 */
 	public void setWebUrl(String webUrl) {
 		this.webUrl = webUrl;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
 	}
 	/**
 	 * @return the content

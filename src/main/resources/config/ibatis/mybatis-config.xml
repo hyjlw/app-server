@@ -14,5 +14,6 @@
 		<mapper resource="sqlmap/SiteMapper.xml" />
 		<mapper resource="sqlmap/NewsTypeMapper.xml" />
 		<mapper resource="sqlmap/WebPageMapper.xml" />
+		<mapper resource="sqlmap/ArticleMapper.xml" />
 	</mappers>
 </configuration>

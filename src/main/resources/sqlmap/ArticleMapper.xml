@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="org.icc.app.dao.WebPageMapper" >
-  <resultMap id="BaseResultMap" type="org.icc.app.pojo.WebPage" >
+<mapper namespace="org.icc.app.dao.ArticleMapper" >
+  <resultMap id="BaseResultMap" type="org.icc.app.pojo.Article" >
     <id column="id" property="id" jdbcType="DECIMAL" />
-    <result column="site_id" property="siteId" jdbcType="DECIMAL" />
-    <result column="type_id" property="typeId" jdbcType="DECIMAL" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="web_id" property="webId" jdbcType="DECIMAL" />
     <result column="web_url" property="webUrl" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="subscriber" property="subscriber" jdbcType="VARCHAR" />
+    <result column="subscribe_date" property="subscribeDate" jdbcType="VARCHAR" />
     <result column="create_date" property="createDate" jdbcType="VARCHAR" />
   </resultMap>
   
@@ -16,26 +18,30 @@
          and id = #{condition.id}
       </if>
       <if test="condition.titleLike != null" >
-       <![CDATA[ and name LIKE CONCAT(CONCAT('%', #{condition.nameLike}), '%') ]]>
+       <![CDATA[ and title LIKE CONCAT(CONCAT('%', #{condition.titleLike}), '%') ]]>
       </if>
     </trim>
   </sql>
   
   <sql id="Base_Column_List" >
-    `id`,
-    `site_id`,
-    `type_id`,
-    `name`,
-	`web_url`,
+    `id`, 
+	`web_id`, 
+	`web_url`, 
+	`title`, 
+	`content`, 
+	`subscriber`, 
+	`subscribe_date`, 
 	`create_date`
   </sql>
   
   <sql id="Select_Column_List" >
-    `id`,
-	`site_id` AS `siteId`,
-	`type_id` AS `typeId`,
-	`name`,
-	`web_url` AS `webUrl`,
+    `id`, 
+	`web_id` AS `webId`, 
+	`web_url` AS `webUrl`, 
+	`title`, 
+	`content`, 
+	`subscriber`, 
+	DATE_FORMAT(`subscribe_date`, '%m/%d/%Y %T') AS `subscribeDate`,
 	DATE_FORMAT(`create_date`, '%m/%d/%Y %T') AS `createDate`
   </sql>
   
@@ -46,7 +52,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from `tb_web_pages`
+    from `tb_articles`
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -60,40 +66,41 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from `tb_web_pages`
+    from `tb_articles`
     where `id` = #{id}
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from `tb_web_pages` where `id` = #{id}
+    delete from `tb_articles` where `id` = #{id}
   </delete>
   
-  <insert id="insert" parameterType="org.icc.app.pojo.WebPage" >
+  <insert id="insert" parameterType="org.icc.app.pojo.Article" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="BEFORE" >
-      select nextval('WebPage')
+      select nextval('Article')
     </selectKey>
-    insert into `tb_web_pages` (
+    insert into `tb_articles` (
     	<include refid="Base_Column_List" />
     )
     values (
-    #{id}, #{siteId}, #{typeId}, #{name}, #{webUrl}, STR_TO_DATE(#{createDate}, '%m/%d/%Y %T')
+    #{id}, #{webId}, #{webUrl}, #{title}, #{content}, #{subscriber}, STR_TO_DATE(#{subscribeDate}, '%m/%d/%Y %T'), STR_TO_DATE(#{createDate}, '%m/%d/%Y %T')
     )
   </insert>
   
   <select id="countByExample" parameterType="org.icc.app.pojo.Criteria" resultType="java.lang.Integer" >
-    select count(id) from `tb_web_pages`
+    select count(id) from `tb_articles`
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   
-  <update id="updateByPrimaryKey" parameterType="org.icc.app.pojo.WebPage" >
-    update `tb_web_pages`
+  <update id="updateByPrimaryKey" parameterType="org.icc.app.pojo.Article" >
+    update `tb_articles`
     set
-    `site_id` = #{siteId},
-    `type_id` = #{typeId},
-    `name` = #{name},
-	`web_url` = #{webUrl}
+    `web_id` = #{webId},
+    `web_url` = #{webUrl},
+    `title` = #{tile},
+	`content` = #{content},
+	`subscriber` = #{subscriber}
     where `id` = #{id}
   </update>
   
