@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.icc.app.cache.DataCache;
+import org.icc.app.crawler.NetEaseCrawler;
 import org.icc.app.dao.ArticleMapper;
 import org.icc.app.pojo.Article;
 import org.icc.app.pojo.Criteria;
@@ -15,6 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import edu.uci.ics.crawler4j.crawler.CrawlConfig;
+import edu.uci.ics.crawler4j.crawler.CrawlController;
+import edu.uci.ics.crawler4j.fetcher.PageFetcher;
+import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
+import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
@@ -37,11 +44,13 @@ public class ArticleServiceImpl implements ArticleService {
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
 	public String saveArticle(Criteria example) {
 		Article article = (Article) example.get("article");
-		article.setCreateDate(DateUtil.getCurrentDate("MM/dd/yyyy HH:mm:ss"));
+		article.setCreateDate(DateUtil.getCurrentDate("yyyy-MM-dd HH:mm:ss"));
 		
 		if(StringUtils.isEmpty(article.getSubscribeDate())) {
-			article.setSubscribeDate(DateUtil.getCurrentDate("MM/dd/yyyy HH:mm:ss"));
+			article.setSubscribeDate(DateUtil.getCurrentDate("yyyy-MM-dd HH:mm:ss"));
 		}
+		
+		logger.info("Save article: " + article);
 		
 		int result = 0;
 		if(article.getId() == null) {
@@ -74,6 +83,41 @@ public class ArticleServiceImpl implements ArticleService {
 			cache.cacheData(DateUtil.getCurrentDate("yyyyMMdd"), list);
 		}
 		return list;
+	}
+
+	@Override
+	public void startCrawl() throws Exception {
+		String crawlStorageFolder = "/data/crawl/netease";
+        int numberOfCrawlers = 7;
+
+        CrawlConfig config = new CrawlConfig();
+        config.setCrawlStorageFolder(crawlStorageFolder);
+
+        /*
+         * Instantiate the controller for this crawl.
+         */
+        PageFetcher pageFetcher = new PageFetcher(config);
+        RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
+        RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
+        
+        try {
+			CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
+
+			/*
+			 * For each crawl, you need to add some seed urls. These are the first
+			 * URLs that are fetched and then the crawler starts following links
+			 * which are found in these pages
+			 */
+			controller.addSeed("http://tech.163.com/");
+
+			/*
+			 * Start the crawl. This is a blocking operation, meaning that your code
+			 * will reach the line after this only when crawling is finished.
+			 */
+			controller.start(NetEaseCrawler.class, numberOfCrawlers);
+		} catch (Exception e) {
+			throw e;
+		}
 	}
 
 }

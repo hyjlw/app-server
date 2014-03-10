@@ -30,8 +30,9 @@
 	<logger name="java.sql.PreparedStatement" level="DEBUG" />
 	<logger name="org.springframework.web.servlet.mvc.method.annotation" level="DEBUG" />
 	<logger name="org.icc.app" level="DEBUG" />
+	<logger name="org.apache.http" level="ERROR" />
 
-	<root level="debug">
+	<root level="DEBUG">
 		<appender-ref ref="stdout" />
 		<appender-ref ref="logfile" />
 	</root>

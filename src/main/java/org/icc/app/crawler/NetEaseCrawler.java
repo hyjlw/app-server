@@ -3,12 +3,16 @@ package org.icc.app.crawler;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.htmlparser.tags.Div;
 import org.htmlparser.tags.HeadingTag;
 import org.htmlparser.tags.LinkTag;
 import org.htmlparser.tags.ParagraphTag;
+import org.icc.app.common.springmvc.SpringContextHolder;
 import org.icc.app.parser.ParseUtils;
 import org.icc.app.pojo.Article;
+import org.icc.app.pojo.Criteria;
+import org.icc.app.service.ArticleService;
 import org.icc.app.util.DateUtil;
 import org.icc.app.util.ServiceTools;
 import org.slf4j.Logger;
@@ -27,6 +31,8 @@ public class NetEaseCrawler extends WebCrawler {
 					+ "|png|tiff?|mid|mp2|mp3|mp4"
 					+ "|wav|avi|mov|mpeg|ram|m4v|pdf"
 					+ "|rm|smil|wmv|swf|wma|zip|rar|gz))$");
+	
+	private static ArticleService articleService = SpringContextHolder.getBean("articleServiceImpl");
 
 	/**
 	 * You should implement this function to specify whether the given url
@@ -35,7 +41,8 @@ public class NetEaseCrawler extends WebCrawler {
 	@Override
 	public boolean shouldVisit(WebURL url) {
 		String href = url.getURL().toLowerCase();
-		return !FILTERS.matcher(href).matches() && href.endsWith(".html");
+		return !FILTERS.matcher(href).matches() && href.startsWith("http://tech.163.com/")
+				&& href.endsWith(".html");
 	}
 
 	/**
@@ -45,7 +52,7 @@ public class NetEaseCrawler extends WebCrawler {
 	@Override
 	public void visit(Page page) {
 		String url = page.getWebURL().getURL();
-		log.debug("Visited URL: " + url);
+		log.debug("Visited URL: " + url); 
 		
 		String title = "";
 		String content = "";
@@ -58,32 +65,73 @@ public class NetEaseCrawler extends WebCrawler {
 
 			List<ParagraphTag> pts = ParseUtils.parseTags(html, ParagraphTag.class, "class", "ep-summary");
 			if(!ServiceTools.isEmpty(pts)) {
-				content = pts.get(0).getStringText();
+				for(ParagraphTag p : pts) {
+					content = p.getStringText();
+				}
+			}
+			
+			if(StringUtils.isEmpty(content)) {
+				List<Div> cps = ParseUtils.parseTags(html, Div.class, "id", "endText");
+				if(!ServiceTools.isEmpty(cps)) {
+					String paraContent = cps.get(0).getStringText();
+					
+					List<ParagraphTag> pcs = ParseUtils.parseTags(paraContent, ParagraphTag.class);
+					
+					if(!ServiceTools.isEmpty(pcs)) {
+						content = pcs.get(1).getStringText();
+					}
+				}
 			}
 
 			List<HeadingTag> hts = ParseUtils.parseTags(html, HeadingTag.class,	"class", "ep-h1");
 			if(!ServiceTools.isEmpty(hts)) {
-				title = hts.get(0).getStringText();
+				for(HeadingTag t : hts) {
+					title = t.getStringText();
+				}
 			}
 
 			List<Div> froms = ParseUtils.parseTags(html, Div.class, "class", "left");
 			if(!ServiceTools.isEmpty(froms)) {
-				String fromString = froms.get(0).getStringText();
+				String fromString = "";
+				for(Div d : froms) {
+					fromString = d.getStringText();
+				}
 				
 				dateTime = fromString.substring(0, 19);
 				
-				List<LinkTag> linkTags = ParseUtils.parseTags(fromString, LinkTag.class, "rel", "nofollow");
+				List<LinkTag> linkTags = ParseUtils.parseTags(fromString, LinkTag.class, "target", "_blank");
 				if(!ServiceTools.isEmpty(linkTags)) {
 					subscriber = linkTags.get(0).getStringText();
 				}
 			}
 
 			Article article = new Article();
+			article.setWebId(2);
 			article.setTitle(title);
 			article.setContent(content);
 			article.setSubscriber(subscriber);
 			article.setSubscribeDate(dateTime);
+			article.setWebUrl(url);
 			article.setCreateDate(DateUtil.getCurrentDate("MM/dd/yyyy HH:mm:ss"));
+			
+			log.info("Save Article: " + article);
+			
+			if(check(article)) {
+				Criteria example = new Criteria();
+				example.put("article", article);
+				
+				articleService.saveArticle(example);
+			}
 		}
+	}
+	
+	private boolean check(Article article) {
+		if (StringUtils.isEmpty(article.getTitle())
+				|| StringUtils.isEmpty(article.getContent())
+				|| StringUtils.isEmpty(article.getWebUrl())) {
+			return false;
+		}
+
+		return true;
 	}
 }

@@ -41,8 +41,8 @@
 	`title`, 
 	`content`, 
 	`subscriber`, 
-	DATE_FORMAT(`subscribe_date`, '%m/%d/%Y %T') AS `subscribeDate`,
-	DATE_FORMAT(`create_date`, '%m/%d/%Y %T') AS `createDate`
+	DATE_FORMAT(`subscribe_date`, '%Y-%m-%d %T') AS `subscribeDate`,
+	DATE_FORMAT(`create_date`, '%Y-%m-%d %T') AS `createDate`
   </sql>
   
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.icc.app.pojo.Criteria" >
@@ -82,7 +82,7 @@
     	<include refid="Base_Column_List" />
     )
     values (
-    #{id}, #{webId}, #{webUrl}, #{title}, #{content}, #{subscriber}, STR_TO_DATE(#{subscribeDate}, '%m/%d/%Y %T'), STR_TO_DATE(#{createDate}, '%m/%d/%Y %T')
+    #{id}, #{webId}, #{webUrl}, #{title}, #{content}, #{subscriber}, STR_TO_DATE(#{subscribeDate}, '%Y-%m-%d %T'), STR_TO_DATE(#{createDate}, '%Y-%m-%d %T')
     )
   </insert>
   

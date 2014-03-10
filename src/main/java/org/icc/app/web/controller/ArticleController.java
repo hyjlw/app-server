@@ -3,6 +3,8 @@ package org.icc.app.web.controller;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.lang.StringUtils;
 import org.icc.app.common.springmvc.DateConvertEditor;
 import org.icc.app.pojo.Article;
@@ -142,5 +144,20 @@ public class ArticleController {
 			logger.error("Exception: ", e);
 			return new ExceptionReturn(e);
 		}
+	}
+	
+	@RequestMapping("/crawl")
+	@ResponseBody
+	public Object crawl(HttpSession session) {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					articleService.startCrawl();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}}).start();
+		return new ExtReturn(true, "开始执行Crawl！");
 	}
 }

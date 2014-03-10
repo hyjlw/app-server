@@ -9,6 +9,7 @@ article = {
 	all : ctx + '/article/all',// 加载所有
 	save : ctx + "/article/save",//保存
 	del : ctx + "/article/del/",//删除
+	crawl : ctx + "/article/crawl",
 	ENABLED : eval('(${fields.enabled==null?"{}":fields.enabled})'),
 	pagesizes:eval('(${fields.pagesizes==null?"{}":fields.pagesizes})'),
 	pages:eval('(${fields.pages==null?"{}":fields.pages})'),
@@ -44,7 +45,7 @@ article.store = new Ext.data.Store({
 			reader : new Ext.data.JsonReader({// 数据读取器
 				totalProperty : 'results', // 记录总数
 				root : 'rows' // Json中的列表数据根节点
-			}, ['id', 'webId', 'webUrl', 'tilte', 'content', 'subscriber', 'subscribeDate', 'createDate']),
+			}, ['id', 'webId', 'webUrl', 'title', 'content', 'subscriber', 'subscribeDate', 'createDate']),
 			listeners : {
 				'load' : function(store, records, options) {
 					article.alwaysFun();
@@ -142,9 +143,23 @@ article.searchField = new Ext.ux.form.SearchField({
 			emptyText : '请输入标题名称',
 			style : 'margin-left: 5px;'
 		});
+		
+article.crawlAction = new Ext.Action({
+	text : '执行Crawl',
+	iconCls : 'synchro',
+	handler : function() {
+		Share.AjaxRequest({
+					url : article.crawl,
+					callback : function(json) {
+						
+					}
+				});
+	}
+});
+
 /** 顶部工具栏 */
 article.tbar = [article.addAction, '-', article.editAction, '-',
-		article.deleteAction, '-', article.searchField];
+		article.deleteAction, '-', article.searchField, '-', article.crawlAction];
 /** 底部工具条 */
 article.bbar = new Ext.PagingToolbar({
 			pageSize : article.pageSize,
@@ -205,8 +220,10 @@ article.formPanel = new Ext.form.FormPanel({
 						name : 'title',
 						anchor : '99%'
 					}, {
+						xtype : 'textarea',
+						height : 120,
 						fieldLabel : '内容',
-						maxLength : 1024,
+						maxLength : 4096,
 						allowBlank : false,
 						name : 'content',
 						anchor : '99%'
@@ -229,7 +246,7 @@ article.formPanel = new Ext.form.FormPanel({
 article.addWindow = new Ext.Window({
 			layout : 'fit',
 			width : 420,
-			height : 240,
+			height : 360,
 			closeAction : 'hide',
 			plain : true,
 			modal : true,

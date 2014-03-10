@@ -106,4 +106,12 @@ public class Article {
 	public void setCreateDate(String createDate) {
 		this.createDate = createDate;
 	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Article [webUrl=" + webUrl + ", title=" + title + ", content="
+				+ content + ", subscriber=" + subscriber + "]";
+	}
 }
