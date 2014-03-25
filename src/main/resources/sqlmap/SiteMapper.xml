@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="org.icc.app.pojo.Site" >
     <id column="id" property="id" jdbcType="DECIMAL" />
     <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="crawler_class" property="crawlerClass" jdbcType="VARCHAR" />
     <result column="site_url" property="siteUrl" jdbcType="VARCHAR" />
     <result column="create_date" property="createDate" jdbcType="VARCHAR" />
   </resultMap>
@@ -25,6 +26,7 @@
   <sql id="Base_Column_List" >
     `id`,
     `name`,
+    `crawler_class`,
 	`site_url`,
 	`create_date`
   </sql>
@@ -32,6 +34,7 @@
   <sql id="Select_Column_List" >
     `id`,
 	`name`,
+	`crawler_class` AS `crawlerClass`,
 	`site_url` AS `siteUrl`,
 	DATE_FORMAT(`create_date`, '%m/%d/%Y %T') AS `createDate`
   </sql>
@@ -73,7 +76,7 @@
     	<include refid="Base_Column_List" />
     )
     values (
-    #{id}, #{name}, #{siteUrl}, STR_TO_DATE(#{createDate}, '%m/%d/%Y %T')
+    #{id}, #{name}, #{crawlerClass}, #{siteUrl}, STR_TO_DATE(#{createDate}, '%m/%d/%Y %T')
     )
   </insert>
   
@@ -88,6 +91,7 @@
     update `tb_sites`
     set
     `name` = #{name},
+    `crawler_class` = #{crawlerClass},
 	`site_url` = #{siteUrl}
     where `id` = #{id}
   </update>
@@ -96,6 +100,6 @@
     	select
 	    	<include refid="Select_Column_List" />
 	    from `tb_sites`
-	</select> 
+	</select>
 
 </mapper>

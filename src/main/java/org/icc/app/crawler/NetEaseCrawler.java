@@ -41,7 +41,7 @@ public class NetEaseCrawler extends WebCrawler {
 	@Override
 	public boolean shouldVisit(WebURL url) {
 		String href = url.getURL().toLowerCase();
-		return !FILTERS.matcher(href).matches() && href.startsWith("http://tech.163.com/")
+		return !FILTERS.matcher(href).matches()
 				&& href.endsWith(".html");
 	}
 

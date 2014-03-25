@@ -8,7 +8,10 @@ import org.icc.app.crawler.NetEaseCrawler;
 import org.icc.app.dao.ArticleMapper;
 import org.icc.app.pojo.Article;
 import org.icc.app.pojo.Criteria;
+import org.icc.app.pojo.WebPage;
+import org.icc.app.queue.CrawlerManager;
 import org.icc.app.service.ArticleService;
+import org.icc.app.service.WebPageService;
 import org.icc.app.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +32,8 @@ public class ArticleServiceImpl implements ArticleService {
 	
 	@Autowired
 	private ArticleMapper articleMapper;
+	@Autowired
+	private WebPageService webPageService;
 
 	@Override
 	public int countByExample(Criteria example) {
@@ -87,37 +92,9 @@ public class ArticleServiceImpl implements ArticleService {
 
 	@Override
 	public void startCrawl() throws Exception {
-		String crawlStorageFolder = "/data/crawl/netease";
-        int numberOfCrawlers = 7;
-
-        CrawlConfig config = new CrawlConfig();
-        config.setCrawlStorageFolder(crawlStorageFolder);
-
-        /*
-         * Instantiate the controller for this crawl.
-         */
-        PageFetcher pageFetcher = new PageFetcher(config);
-        RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
-        RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
-        
-        try {
-			CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
-
-			/*
-			 * For each crawl, you need to add some seed urls. These are the first
-			 * URLs that are fetched and then the crawler starts following links
-			 * which are found in these pages
-			 */
-			controller.addSeed("http://tech.163.com/");
-
-			/*
-			 * Start the crawl. This is a blocking operation, meaning that your code
-			 * will reach the line after this only when crawling is finished.
-			 */
-			controller.start(NetEaseCrawler.class, numberOfCrawlers);
-		} catch (Exception e) {
-			throw e;
-		}
+		List<WebPage> pages = webPageService.selectAllPages();
+		
+		CrawlerManager.getInstance().addQueue(pages);
 	}
 
 }

@@ -6,6 +6,7 @@
     <result column="site_id" property="siteId" jdbcType="DECIMAL" />
     <result column="type_id" property="typeId" jdbcType="DECIMAL" />
     <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="storage_folder" property="storageFolder" jdbcType="VARCHAR" />
     <result column="web_url" property="webUrl" jdbcType="VARCHAR" />
     <result column="create_date" property="createDate" jdbcType="VARCHAR" />
   </resultMap>
@@ -26,6 +27,7 @@
     `site_id`,
     `type_id`,
     `name`,
+    `storage_folder`,
 	`web_url`,
 	`create_date`
   </sql>
@@ -35,6 +37,7 @@
 	`site_id` AS `siteId`,
 	`type_id` AS `typeId`,
 	`name`,
+	`storage_folder` AS `storageFolder`,
 	`web_url` AS `webUrl`,
 	DATE_FORMAT(`create_date`, '%m/%d/%Y %T') AS `createDate`
   </sql>
@@ -76,7 +79,7 @@
     	<include refid="Base_Column_List" />
     )
     values (
-    #{id}, #{siteId}, #{typeId}, #{name}, #{webUrl}, STR_TO_DATE(#{createDate}, '%m/%d/%Y %T')
+    #{id}, #{siteId}, #{typeId}, #{name}, #{storageFolder}, #{webUrl}, STR_TO_DATE(#{createDate}, '%m/%d/%Y %T')
     )
   </insert>
   
@@ -93,14 +96,23 @@
     `site_id` = #{siteId},
     `type_id` = #{typeId},
     `name` = #{name},
+    `storage_folder` = #{storageFolder},
 	`web_url` = #{webUrl}
     where `id` = #{id}
   </update>
   
     <select id="selectAll" resultType="org.icc.app.pojo.WebPage"> 
     	select
-	    	<include refid="Select_Column_List" />
-	    from `tb_web_pages`
+	    	`p`.`id`,
+			`site_id` AS `siteId`,
+			`type_id` AS `typeId`,
+			`p`.`name`,
+			`storage_folder` AS `storageFolder`,
+			`web_url` AS `webUrl`,
+			`s`.`crawler_class` AS `crawlerClass`,
+			DATE_FORMAT(`p`.`create_date`, '%m/%d/%Y %T') AS `createDate`
+	    from `tb_web_pages` AS `p`
+	    inner join `tb_sites` AS `s` on `p`.`site_id` = `s`.`id`
 	</select> 
 
 </mapper>

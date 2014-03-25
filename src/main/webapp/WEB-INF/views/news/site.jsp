@@ -43,7 +43,7 @@ site.store = new Ext.data.Store({
 			reader : new Ext.data.JsonReader({// 数据读取器
 				totalProperty : 'results', // 记录总数
 				root : 'rows' // Json中的列表数据根节点
-			}, ['id', 'name', 'siteUrl', 'createDate']),
+			}, ['id', 'name', 'crawlerClass' 'siteUrl', 'createDate']),
 			listeners : {
 				'load' : function(store, records, options) {
 					site.alwaysFun();
@@ -76,6 +76,9 @@ site.colModel = new Ext.grid.ColumnModel({
 					}, {
 						header : '名称',
 						dataIndex : 'name'
+					}, {
+						header : 'Crawler类',
+						dataIndex : 'crawlerClass'
 					}, {
 						header : '网址',
 						dataIndex : 'siteUrl'
@@ -169,7 +172,13 @@ site.formPanel = new Ext.form.FormPanel({
 						allowBlank : false,
 						name : 'name',
 						anchor : '99%'
-					},{
+					}, {
+						fieldLabel : 'Crawler类',
+						maxLength : 64,
+						allowBlank : false,
+						name : 'crawlerClass',
+						anchor : '99%'
+					}, {
 						fieldLabel : '站点',
 						maxLength : 128,
 						allowBlank : false,

@@ -12,7 +12,9 @@ public class WebPage {
 	private Integer siteId;
 	private Integer typeId;
 	private String name;
+	private String storageFolder;
 	private String webUrl;
+	private String crawlerClass;
 	private String createDate;
 	/**
 	 * @return the id
@@ -63,6 +65,18 @@ public class WebPage {
 		this.name = name;
 	}
 	/**
+	 * @return the storageFolder
+	 */
+	public String getStorageFolder() {
+		return storageFolder;
+	}
+	/**
+	 * @param storageFolder the storageFolder to set
+	 */
+	public void setStorageFolder(String storageFolder) {
+		this.storageFolder = storageFolder;
+	}
+	/**
 	 * @return the webUrl
 	 */
 	public String getWebUrl() {
@@ -73,6 +87,18 @@ public class WebPage {
 	 */
 	public void setWebUrl(String webUrl) {
 		this.webUrl = webUrl;
+	}
+	/**
+	 * @return the crawlerClass
+	 */
+	public String getCrawlerClass() {
+		return crawlerClass;
+	}
+	/**
+	 * @param crawlerClass the crawlerClass to set
+	 */
+	public void setCrawlerClass(String crawlerClass) {
+		this.crawlerClass = crawlerClass;
 	}
 	/**
 	 * @return the createDate

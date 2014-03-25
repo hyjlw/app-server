@@ -11,6 +11,7 @@ package org.icc.app.pojo;
 public class Site {
 	private Integer id;
 	private String name;
+	private String crawlerClass;
 	private String siteUrl;
 	private String createDate;
 	/**
@@ -36,6 +37,18 @@ public class Site {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+	/**
+	 * @return the crawlerClass
+	 */
+	public String getCrawlerClass() {
+		return crawlerClass;
+	}
+	/**
+	 * @param crawlerClass the crawlerClass to set
+	 */
+	public void setCrawlerClass(String crawlerClass) {
+		this.crawlerClass = crawlerClass;
 	}
 	/**
 	 * @return the siteUrl

@@ -45,7 +45,7 @@ page.store = new Ext.data.Store({
 			reader : new Ext.data.JsonReader({// 数据读取器
 				totalProperty : 'results', // 记录总数
 				root : 'rows' // Json中的列表数据根节点
-			}, ['id', 'siteId', 'typeId', 'name', 'webUrl', 'createDate']),
+			}, ['id', 'siteId', 'typeId', 'name', 'storageFolder', 'webUrl', 'createDate']),
 			listeners : {
 				'load' : function(store, records, options) {
 					page.alwaysFun();
@@ -90,6 +90,9 @@ page.colModel = new Ext.grid.ColumnModel({
 					}, {
 						header : '名称',
 						dataIndex : 'name'						
+					}, {
+						header : '存储路径',
+						dataIndex : 'storageFolder'						
 					}, {
 						header : '地址',
 						dataIndex : 'webUrl'						
@@ -218,6 +221,13 @@ page.formPanel = new Ext.form.FormPanel({
 						maxLength : 128,
 						allowBlank : false,
 						name : 'name',
+						anchor : '99%'
+					},
+					{
+						fieldLabel : '存储路径',
+						maxLength : 128,
+						allowBlank : false,
+						name : 'storageFolder',
 						anchor : '99%'
 					},
 					{
