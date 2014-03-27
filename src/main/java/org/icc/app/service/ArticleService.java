@@ -10,7 +10,7 @@ public interface ArticleService {
 
 	List<Article> selectByExample(Criteria example);
 	
-	List<Article> selectAllArticles();
+	List<Article> selectArticlesByCriteria(Criteria criteria);
 
 	/**
 	 * 

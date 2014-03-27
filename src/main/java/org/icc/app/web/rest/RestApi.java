@@ -1,13 +1,14 @@
 package org.icc.app.web.rest;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
+import org.icc.app.pojo.Article;
+import org.icc.app.pojo.ArticlePager;
+import org.icc.app.pojo.Criteria;
 import org.icc.app.pojo.News;
+import org.icc.app.service.ArticleService;
 import org.icc.app.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class RestApi {
 	@Autowired
 	private NewsService newsService;
+	@Autowired
+	private ArticleService articleService;
 
 	@RequestMapping(value = "/news")
 	@ResponseBody
@@ -30,23 +33,21 @@ public class RestApi {
 		return newsService.selectAllNews();
 	}
 	
-	@RequestMapping(value = "/upload")
+	@RequestMapping(value = "/articles")
 	@ResponseBody
-	public String upload(HttpServletRequest request, HttpServletResponse response) {
-		byte[] bytes;
-		try {
-			InputStream ins = request.getInputStream();
-			
-			bytes = new byte[ins.available()];
-			ins.read(bytes);
-			String s = new String(bytes);
-			System.out.println(s);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	public List<Article> getArticles(@RequestBody ArticlePager pager,
+			HttpServletRequest request) {
+		
+		Criteria criteria = new Criteria();
+		if (pager.getLimit() != null && pager.getStart() != null) {
+			criteria.setOracleEnd(pager.getLimit());
+			criteria.setOracleStart(pager.getStart());
+		}
+		criteria.setOrderByClause(" create_date desc, subscribe_date desc");
+		if (pager.getTypeId() != null) {
+			criteria.put("typeId", pager.getTypeId());
 		}
 		
-		
-		return "success";
+		return articleService.selectArticlesByCriteria(criteria);
 	}
 }

@@ -3,6 +3,8 @@
  */
 package org.icc.app.pojo;
 
+import java.util.List;
+
 /**
  * @author LL
  *
@@ -16,6 +18,8 @@ public class Article {
 	private String subscriber;
 	private String subscribeDate;
 	private String createDate;
+	
+	private List<ArticleImage> imgs;
 	/**
 	 * @return the id
 	 */
@@ -113,5 +117,11 @@ public class Article {
 	public String toString() {
 		return "Article [webUrl=" + webUrl + ", title=" + title + ", content="
 				+ content + ", subscriber=" + subscriber + "]";
+	}
+	public List<ArticleImage> getImgs() {
+		return imgs;
+	}
+	public void setImgs(List<ArticleImage> imgs) {
+		this.imgs = imgs;
 	}
 }

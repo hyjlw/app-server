@@ -43,7 +43,7 @@ site.store = new Ext.data.Store({
 			reader : new Ext.data.JsonReader({// 数据读取器
 				totalProperty : 'results', // 记录总数
 				root : 'rows' // Json中的列表数据根节点
-			}, ['id', 'name', 'crawlerClass' 'siteUrl', 'createDate']),
+			}, ['id', 'name', 'crawlerClass', 'siteUrl', 'createDate']),
 			listeners : {
 				'load' : function(store, records, options) {
 					site.alwaysFun();

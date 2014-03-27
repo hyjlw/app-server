@@ -1,10 +1,9 @@
 package org.icc.app.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.icc.app.cache.DataCache;
-import org.icc.app.crawler.NetEaseCrawler;
 import org.icc.app.dao.ArticleMapper;
 import org.icc.app.pojo.Article;
 import org.icc.app.pojo.Criteria;
@@ -19,12 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import edu.uci.ics.crawler4j.crawler.CrawlConfig;
-import edu.uci.ics.crawler4j.crawler.CrawlController;
-import edu.uci.ics.crawler4j.fetcher.PageFetcher;
-import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
-import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
@@ -78,14 +71,11 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 
 	@Override
-	public List<Article> selectAllArticles() {
-		DataCache cache = DataCache.getCache();
+	public List<Article> selectArticlesByCriteria(Criteria criteria) {
+		List<Article> list = articleMapper.selectByCriteria(criteria);
 		
-		List<Article> list = cache.getCacheData();
-		if(list == null || list.isEmpty()) {
-			list = articleMapper.selectAll();
-			logger.info("-------Cache news objects-------");
-			cache.cacheData(DateUtil.getCurrentDate("yyyyMMdd"), list);
+		if(list == null) {
+			list = new ArrayList<Article>();
 		}
 		return list;
 	}

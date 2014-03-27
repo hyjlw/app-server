@@ -104,10 +104,35 @@
     where `id` = #{id}
   </update>
   
-    <select id="selectAll" resultType="org.icc.app.pojo.WebPage"> 
+    <select id="selectByCriteria" resultMap="articleOut" parameterType="org.icc.app.pojo.Criteria"> 
     	select
-	    	<include refid="Select_Column_List" />
-	    from `tb_web_pages`
+	    	`a`.`web_url` AS `webUrl`, 
+			`a`.`title`, 
+			`a`.`content`, 
+			`a`.`subscriber`, 
+			DATE_FORMAT(`a`.`subscribe_date`, '%Y-%m-%d %T') AS `subscribeDate`,
+			`i`.`img_url` AS `imgUrl`
+	    from `tb_articles` AS `a` left outer join `tb_article_images` AS `i`
+	    on `a`.`id` = `i`.`article_id`
+	    where 1 = 1
+	    <if test="_parameter != null" >
+	      <if test="condition.typeId != null" >
+	         and `a`.`web_id` = (select id from tb_web_pages as w where w.type_id = #{condition.typeId})
+	      </if>
+	    </if>
+	    <include refid="common.MySQL_Pagination_Tail" />
 	</select> 
+	
+	<resultMap type="org.icc.app.pojo.Article" id="articleOut">
+		<result column="web_url" property="webUrl" />
+	    <result column="title" property="title" />
+	    <result column="content" property="content" />
+	    <result column="subscriber" property="subscriber" />
+	    <result column="subscribe_date" property="subscribeDate" />
+	    <collection property="imgs" resultMap="articleImgs" />
+	</resultMap>
 
+	<resultMap type="org.icc.app.pojo.ArticleImage" id="articleImgs">
+		<result column="img_url" property="imgUrl" />
+	</resultMap>
 </mapper>
