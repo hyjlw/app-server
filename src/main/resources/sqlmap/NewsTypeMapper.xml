@@ -93,7 +93,7 @@
     where `id` = #{id}
   </update>
   
-    <select id="selectAllNews" resultType="org.icc.app.pojo.NewsType"> 
+    <select id="selectAll" resultType="org.icc.app.pojo.NewsType"> 
     	select
 	    	<include refid="Select_Column_List" />
 	    from `tb_news_types`

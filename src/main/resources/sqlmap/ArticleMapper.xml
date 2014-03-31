@@ -124,15 +124,15 @@
 	</select> 
 	
 	<resultMap type="org.icc.app.pojo.Article" id="articleOut">
-		<result column="web_url" property="webUrl" />
+		<result column="webUrl" property="webUrl" />
 	    <result column="title" property="title" />
 	    <result column="content" property="content" />
 	    <result column="subscriber" property="subscriber" />
-	    <result column="subscribe_date" property="subscribeDate" />
+	    <result column="subscribeDate" property="subscribeDate" />
 	    <collection property="imgs" resultMap="articleImgs" />
 	</resultMap>
 
 	<resultMap type="org.icc.app.pojo.ArticleImage" id="articleImgs">
-		<result column="img_url" property="imgUrl" />
+		<result column="imgUrl" property="imgUrl" />
 	</resultMap>
 </mapper>

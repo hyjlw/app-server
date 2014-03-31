@@ -5,11 +5,13 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.icc.app.pojo.Article;
-import org.icc.app.pojo.ArticlePager;
+import org.icc.app.pojo.RestPager;
 import org.icc.app.pojo.Criteria;
 import org.icc.app.pojo.News;
+import org.icc.app.pojo.NewsType;
 import org.icc.app.service.ArticleService;
 import org.icc.app.service.NewsService;
+import org.icc.app.service.NewsTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +26,8 @@ public class RestApi {
 	private NewsService newsService;
 	@Autowired
 	private ArticleService articleService;
+	@Autowired
+	private NewsTypeService newsTypeService;
 
 	@RequestMapping(value = "/news")
 	@ResponseBody
@@ -35,7 +39,7 @@ public class RestApi {
 	
 	@RequestMapping(value = "/articles")
 	@ResponseBody
-	public List<Article> getArticles(@RequestBody ArticlePager pager,
+	public List<Article> getArticles(@RequestBody RestPager pager,
 			HttpServletRequest request) {
 		
 		Criteria criteria = new Criteria();
@@ -49,5 +53,12 @@ public class RestApi {
 		}
 		
 		return articleService.selectArticlesByCriteria(criteria);
+	}
+	
+	@RequestMapping(value = "/types")
+	@ResponseBody
+	public List<NewsType> getNewsTypes(@RequestBody RestPager pager,
+			HttpServletRequest request) {
+		return newsTypeService.selectAll();
 	}
 }

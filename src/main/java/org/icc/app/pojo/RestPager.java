@@ -1,6 +1,6 @@
 package org.icc.app.pojo;
 
-public class ArticlePager extends ExtPager {
+public class RestPager extends ExtPager {
 	private Integer typeId;
 
 	public Integer getTypeId() {
