@@ -44,8 +44,8 @@ public class ArticleServiceImpl implements ArticleService {
 		Article article = (Article) example.get("article");
 		article.setCreateDate(DateUtil.getCurrentDate("yyyy-MM-dd HH:mm:ss"));
 		
-		if(StringUtils.isEmpty(article.getSubscribeDate())) {
-			article.setSubscribeDate(DateUtil.getCurrentDate("yyyy-MM-dd HH:mm:ss"));
+		if(StringUtils.isEmpty(article.getPublishDate())) {
+			article.setPublishDate(DateUtil.getCurrentDate("yyyy-MM-dd HH:mm:ss"));
 		}
 		
 		logger.info("Save article: " + article);

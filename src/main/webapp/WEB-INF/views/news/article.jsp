@@ -45,7 +45,7 @@ article.store = new Ext.data.Store({
 			reader : new Ext.data.JsonReader({// 数据读取器
 				totalProperty : 'results', // 记录总数
 				root : 'rows' // Json中的列表数据根节点
-			}, ['id', 'webId', 'webUrl', 'title', 'content', 'subscriber', 'subscribeDate', 'createDate']),
+			}, ['id', 'webId', 'webUrl', 'title', 'content', 'publisher', 'publishDate', 'createDate']),
 			listeners : {
 				'load' : function(store, records, options) {
 					article.alwaysFun();
@@ -92,10 +92,10 @@ article.colModel = new Ext.grid.ColumnModel({
 						dataIndex : 'webUrl'						
 					}, {
 						header : '来源',
-						dataIndex : 'subscriber'						
+						dataIndex : 'publisher'						
 					}, {
 						header : '发布日期',
-						dataIndex : 'subscribeDate'						
+						dataIndex : 'publishDate'						
 					}, {
 						header : '创建日期',
 						dataIndex : 'createDate'
@@ -231,7 +231,7 @@ article.formPanel = new Ext.form.FormPanel({
 						fieldLabel : '来源',
 						maxLength : 256,
 						allowBlank : false,
-						name : 'subscriber',
+						name : 'publisher',
 						anchor : '99%'
 					}, {
 						fieldLabel : '地址',

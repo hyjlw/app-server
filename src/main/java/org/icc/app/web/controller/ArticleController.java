@@ -70,7 +70,7 @@ public class ArticleController {
 			if (StringUtils.isNotBlank(pager.getDir()) && StringUtils.isNotBlank(pager.getSort())) {
 				criteria.setOrderByClause(pager.getSort() + " " + pager.getDir());
 			} else {
-				criteria.setOrderByClause(" create_date desc, subscribe_date desc");
+				criteria.setOrderByClause(" create_date desc, publish_date desc");
 			}
 			if (StringUtils.isNotBlank(title)) {
 				criteria.put("titleLike", title);

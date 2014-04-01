@@ -15,8 +15,8 @@ public class Article {
 	private String webUrl;
 	private String title;
 	private String content;
-	private String subscriber;
-	private String subscribeDate;
+	private String publisher;
+	private String publishDate;
 	private String createDate;
 	
 	private List<ArticleImage> imgs;
@@ -75,30 +75,6 @@ public class Article {
 		this.content = content;
 	}
 	/**
-	 * @return the subscriber
-	 */
-	public String getSubscriber() {
-		return subscriber;
-	}
-	/**
-	 * @param subscriber the subscriber to set
-	 */
-	public void setSubscriber(String subscriber) {
-		this.subscriber = subscriber;
-	}
-	/**
-	 * @return the subscribeDate
-	 */
-	public String getSubscribeDate() {
-		return subscribeDate;
-	}
-	/**
-	 * @param subscribeDate the subscribeDate to set
-	 */
-	public void setSubscribeDate(String subscribeDate) {
-		this.subscribeDate = subscribeDate;
-	}
-	/**
 	 * @return the createDate
 	 */
 	public String getCreateDate() {
@@ -110,18 +86,48 @@ public class Article {
 	public void setCreateDate(String createDate) {
 		this.createDate = createDate;
 	}
+	/**
+	 * @return the publisher
+	 */
+	public String getPublisher() {
+		return publisher;
+	}
+	/**
+	 * @param publisher the publisher to set
+	 */
+	public void setPublisher(String publisher) {
+		this.publisher = publisher;
+	}
+	/**
+	 * @return the publishDate
+	 */
+	public String getPublishDate() {
+		return publishDate;
+	}
+	/**
+	 * @param publishDate the publishDate to set
+	 */
+	public void setPublishDate(String publishDate) {
+		this.publishDate = publishDate;
+	}
+	/**
+	 * @return the imgs
+	 */
+	public List<ArticleImage> getImgs() {
+		return imgs;
+	}
+	/**
+	 * @param imgs the imgs to set
+	 */
+	public void setImgs(List<ArticleImage> imgs) {
+		this.imgs = imgs;
+	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
 		return "Article [webUrl=" + webUrl + ", title=" + title + ", content="
-				+ content + ", subscriber=" + subscriber + "]";
-	}
-	public List<ArticleImage> getImgs() {
-		return imgs;
-	}
-	public void setImgs(List<ArticleImage> imgs) {
-		this.imgs = imgs;
+				+ content + ", publisher=" + publisher + "]";
 	}
 }

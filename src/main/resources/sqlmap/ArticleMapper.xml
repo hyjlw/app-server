@@ -7,8 +7,8 @@
     <result column="web_url" property="webUrl" jdbcType="VARCHAR" />
     <result column="title" property="title" jdbcType="VARCHAR" />
     <result column="content" property="content" jdbcType="VARCHAR" />
-    <result column="subscriber" property="subscriber" jdbcType="VARCHAR" />
-    <result column="subscribe_date" property="subscribeDate" jdbcType="VARCHAR" />
+    <result column="publisher" property="publisher" jdbcType="VARCHAR" />
+    <result column="publish_date" property="publishDate" jdbcType="VARCHAR" />
     <result column="create_date" property="createDate" jdbcType="VARCHAR" />
   </resultMap>
   
@@ -29,8 +29,8 @@
 	`web_url`, 
 	`title`, 
 	`content`, 
-	`subscriber`, 
-	`subscribe_date`, 
+	`publisher`, 
+	`publish_date`, 
 	`create_date`
   </sql>
   
@@ -40,8 +40,8 @@
 	`web_url` AS `webUrl`, 
 	`title`, 
 	`content`, 
-	`subscriber`, 
-	DATE_FORMAT(`subscribe_date`, '%Y-%m-%d %T') AS `subscribeDate`,
+	`publisher`, 
+	DATE_FORMAT(`publish_date`, '%Y-%m-%d %T') AS `publishDate`,
 	DATE_FORMAT(`create_date`, '%Y-%m-%d %T') AS `createDate`
   </sql>
   
@@ -82,7 +82,7 @@
     	<include refid="Base_Column_List" />
     )
     values (
-    #{id}, #{webId}, #{webUrl}, #{title}, #{content}, #{subscriber}, STR_TO_DATE(#{subscribeDate}, '%Y-%m-%d %T'), STR_TO_DATE(#{createDate}, '%Y-%m-%d %T')
+    #{id}, #{webId}, #{webUrl}, #{title}, #{content}, #{publisher}, STR_TO_DATE(#{publishDate}, '%Y-%m-%d %T'), STR_TO_DATE(#{createDate}, '%Y-%m-%d %T')
     )
   </insert>
   
@@ -100,7 +100,7 @@
     `web_url` = #{webUrl},
     `title` = #{tile},
 	`content` = #{content},
-	`subscriber` = #{subscriber}
+	`publisher` = #{publisher}
     where `id` = #{id}
   </update>
   
@@ -109,8 +109,8 @@
 	    	`a`.`web_url` AS `webUrl`, 
 			`a`.`title`, 
 			`a`.`content`, 
-			`a`.`subscriber`, 
-			DATE_FORMAT(`a`.`subscribe_date`, '%Y-%m-%d %T') AS `subscribeDate`,
+			`a`.`publisher`, 
+			DATE_FORMAT(`a`.`publish_date`, '%Y-%m-%d %T') AS `publishDate`,
 			`i`.`img_url` AS `imgUrl`
 	    from `tb_articles` AS `a` left outer join `tb_article_images` AS `i`
 	    on `a`.`id` = `i`.`article_id`
@@ -127,8 +127,8 @@
 		<result column="webUrl" property="webUrl" />
 	    <result column="title" property="title" />
 	    <result column="content" property="content" />
-	    <result column="subscriber" property="subscriber" />
-	    <result column="subscribeDate" property="subscribeDate" />
+	    <result column="publisher" property="publisher" />
+	    <result column="publishDate" property="publishDate" />
 	    <collection property="imgs" resultMap="articleImgs" />
 	</resultMap>
 

@@ -56,7 +56,7 @@ public class NetEaseCrawler extends WebCrawler {
 		
 		String title = "";
 		String content = "";
-		String subscriber = "";
+		String publisher = "";
 		String dateTime = "";
 
 		if (page.getParseData() instanceof HtmlParseData) {
@@ -101,7 +101,7 @@ public class NetEaseCrawler extends WebCrawler {
 				
 				List<LinkTag> linkTags = ParseUtils.parseTags(fromString, LinkTag.class, "target", "_blank");
 				if(!ServiceTools.isEmpty(linkTags)) {
-					subscriber = linkTags.get(0).getStringText();
+					publisher = linkTags.get(0).getStringText();
 				}
 			}
 
@@ -109,8 +109,8 @@ public class NetEaseCrawler extends WebCrawler {
 			article.setWebId(2);
 			article.setTitle(title);
 			article.setContent(content);
-			article.setSubscriber(subscriber);
-			article.setSubscribeDate(dateTime);
+			article.setPublisher(publisher);
+			article.setPublishDate(dateTime);
 			article.setWebUrl(url);
 			article.setCreateDate(DateUtil.getCurrentDate("MM/dd/yyyy HH:mm:ss"));
 			
