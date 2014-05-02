@@ -28,4 +28,6 @@ public interface WebPageService {
 	String delete(Criteria example);
 	
 	Map<String, String> selectAllPagesMap();
+	
+	Map<String, Boolean> selectUrlMap();
 }

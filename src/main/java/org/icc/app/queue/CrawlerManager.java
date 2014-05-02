@@ -3,12 +3,14 @@
  */
 package org.icc.app.queue;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang.StringUtils;
 import org.icc.app.pojo.WebPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,12 +68,20 @@ public class CrawlerManager {
 		
 		public Consumer(List<WebPage> items) {
 			this.items = items;
+			
+			Iterator<WebPage> itr = this.items.iterator(); 
+			while(itr.hasNext()) {
+				WebPage p = itr.next();
+				if(StringUtils.isBlank(p.getWebUrl())) {
+					itr.remove();
+				}
+			}
 		}
 
 		@Override
 		public void run() {
 			for(WebPage page : items) {
-				String crawlStorageFolder = "/data/crawl" + page.getStorageFolder();
+				String crawlStorageFolder = "/tmp/data/crawl" + page.getStorageFolder();
 				log.info("Set storage folder to: " + crawlStorageFolder);
 				
 		        int numberOfCrawlers = 7;

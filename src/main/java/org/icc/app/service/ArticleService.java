@@ -28,5 +28,5 @@ public interface ArticleService {
 
 	void startCrawl() throws Exception;
 	
-
+	Article getArticleById(Integer id);
 }

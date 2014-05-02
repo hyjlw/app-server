@@ -106,6 +106,7 @@
   
     <select id="selectByCriteria" resultMap="articleOut" parameterType="org.icc.app.pojo.Criteria"> 
     	select
+    	 	`a`.`id` AS `id`,
 	    	`a`.`web_url` AS `webUrl`, 
 			`a`.`title`, 
 			`a`.`content`, 
@@ -116,6 +117,9 @@
 	    on `a`.`id` = `i`.`article_id`
 	    where 1 = 1
 	    <if test="_parameter != null" >
+	      <if test="condition.id != null" >
+	         and `a`.`id` = #{condition.id}
+	      </if>
 	      <if test="condition.typeId != null" >
 	         and `a`.`web_id` = (select id from tb_web_pages as w where w.type_id = #{condition.typeId})
 	      </if>
@@ -124,6 +128,7 @@
 	</select> 
 	
 	<resultMap type="org.icc.app.pojo.Article" id="articleOut">
+		<result column="id" property="id" />
 		<result column="webUrl" property="webUrl" />
 	    <result column="title" property="title" />
 	    <result column="content" property="content" />

@@ -29,7 +29,7 @@ public interface WebPageMapper {
 	List<WebPage> selectByExample(Criteria example);
 	
 	List<WebPage> selectAll();
-
+	
 	/**
 	 * 根据主键更新记录
 	 */

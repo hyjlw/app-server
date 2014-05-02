@@ -61,4 +61,11 @@ public class RestApi {
 			HttpServletRequest request) {
 		return newsTypeService.selectAll();
 	}
+	
+	@RequestMapping(value = "/getArticleById")
+	@ResponseBody
+	public Article getArticleById(@RequestBody Article article,
+			HttpServletRequest request) {
+		return articleService.getArticleById(article.getId());
+	}
 }

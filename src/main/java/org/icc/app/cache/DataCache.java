@@ -12,11 +12,15 @@ public class DataCache<T> {
 	private Map<String, List<T>> map;
 	private Map<String, Long> timeMap;
 	
+	private Map<String, Boolean> urlMap;
+	
 	private String latestDate = "";
 	
 	private DataCache() {
 		map = new HashMap<String, List<T>>();
 		timeMap = new HashMap<String, Long>();
+		
+		urlMap = new HashMap<String, Boolean>();
 	}
 	
 	public static DataCache getCache() {
@@ -44,6 +48,16 @@ public class DataCache<T> {
 			timeMap.put(latestDate, new Date().getTime());
 			this.latestDate = latestDate;
 		}
+	}
+	
+	public void cacheUrl(String url, Boolean flag) {
+		synchronized(DataCache.class) {
+			urlMap.put(url, flag);
+		}
+	}
+	
+	public Map<String, Boolean> getCachedUrl() {
+		return urlMap;
 	}
 	
 	private boolean timeout(String key) {

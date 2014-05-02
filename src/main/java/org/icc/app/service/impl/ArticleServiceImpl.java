@@ -12,6 +12,7 @@ import org.icc.app.queue.CrawlerManager;
 import org.icc.app.service.ArticleService;
 import org.icc.app.service.WebPageService;
 import org.icc.app.util.DateUtil;
+import org.icc.app.util.ServiceTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +86,18 @@ public class ArticleServiceImpl implements ArticleService {
 		List<WebPage> pages = webPageService.selectAllPages();
 		
 		CrawlerManager.getInstance().addQueue(pages);
+	}
+
+	@Override
+	public Article getArticleById(Integer id) {
+		Criteria criteria = new Criteria();
+		criteria.put("id", id);
+		
+		List<Article> list = articleMapper.selectByCriteria(criteria);
+		if(!ServiceTools.isEmpty(list)) {
+			return list.get(0);
+		}
+		return null;
 	}
 
 }

@@ -92,4 +92,18 @@ public class WebPageServiceImpl implements WebPageService {
 		return map;
 	}
 
+	@Override
+	public Map<String, Boolean> selectUrlMap() {
+		DataCache cache = DataCache.getCache();
+		
+		Map<String, Boolean> urlMap = cache.getCachedUrl();
+		if(urlMap == null || urlMap.isEmpty()) {
+			List<WebPage> list = selectAllPages();
+			for(WebPage page : list) {
+				cache.cacheUrl(page.getWebUrl(), true);
+			}
+		}
+		return urlMap;
+	}
+
 }

@@ -29,7 +29,7 @@ public interface ArticleMapper {
 	List<Article> selectByExample(Criteria example);
 	
 	List<Article> selectByCriteria(Criteria criteria);
-
+	
 	/**
 	 * 根据主键更新记录
 	 */

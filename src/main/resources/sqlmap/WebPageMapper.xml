@@ -19,6 +19,9 @@
       <if test="condition.titleLike != null" >
        <![CDATA[ and name LIKE CONCAT(CONCAT('%', #{condition.nameLike}), '%') ]]>
       </if>
+      <if test="condition.webUrl != null" >
+       	and web_url = #{condition.webUrl}
+      </if>
     </trim>
   </sql>
   

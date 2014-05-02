@@ -1,6 +1,7 @@
 package org.icc.app.crawler;
 
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
@@ -12,7 +13,9 @@ import org.icc.app.common.springmvc.SpringContextHolder;
 import org.icc.app.parser.ParseUtils;
 import org.icc.app.pojo.Article;
 import org.icc.app.pojo.Criteria;
+import org.icc.app.pojo.WebPage;
 import org.icc.app.service.ArticleService;
+import org.icc.app.service.WebPageService;
 import org.icc.app.util.DateUtil;
 import org.icc.app.util.ServiceTools;
 import org.slf4j.Logger;
@@ -26,6 +29,8 @@ import edu.uci.ics.crawler4j.url.WebURL;
 public class NetEaseCrawler extends WebCrawler {
 	private final static Logger log = LoggerFactory.getLogger(NetEaseCrawler.class);
 	
+	private final static int DEFAULT_WEB_ID = 1;
+	
 	private final static Pattern FILTERS = Pattern
 			.compile(".*(\\.(css|js|bmp|gif|jpe?g"
 					+ "|png|tiff?|mid|mp2|mp3|mp4"
@@ -33,6 +38,7 @@ public class NetEaseCrawler extends WebCrawler {
 					+ "|rm|smil|wmv|swf|wma|zip|rar|gz))$");
 	
 	private static ArticleService articleService = SpringContextHolder.getBean("articleServiceImpl");
+	private static WebPageService webPageService = SpringContextHolder.getBean("webPageServiceImpl");
 
 	/**
 	 * You should implement this function to specify whether the given url
@@ -106,23 +112,42 @@ public class NetEaseCrawler extends WebCrawler {
 			}
 
 			Article article = new Article();
-			article.setWebId(2);
-			article.setTitle(title);
-			article.setContent(content);
-			article.setPublisher(publisher);
-			article.setPublishDate(dateTime);
-			article.setWebUrl(url);
-			article.setCreateDate(DateUtil.getCurrentDate("MM/dd/yyyy HH:mm:ss"));
 			
-			log.info("Save Article: " + article);
+			String baseUrl = ServiceTools.getBaseUrl(url);
 			
-			if(check(article)) {
-				Criteria example = new Criteria();
-				example.put("article", article);
+			if(checkValidateUrl(baseUrl)) {
+				article.setWebId(getWebPageId(baseUrl));
+				article.setTitle(title);
+				article.setContent(content);
+				article.setPublisher(publisher);
+				article.setPublishDate(dateTime);
+				article.setWebUrl(url);
+				article.setCreateDate(DateUtil.getCurrentDate("MM/dd/yyyy HH:mm:ss"));
 				
-				articleService.saveArticle(example);
+				log.info("Save Article: " + article);
+				
+				if(check(article)) {
+					Criteria example = new Criteria();
+					example.put("article", article);
+					
+					articleService.saveArticle(example);
+				}
 			}
 		}
+	}
+	
+	private int getWebPageId(String url) {
+		int id = DEFAULT_WEB_ID;
+		
+		Criteria example = new Criteria();
+		example.put("webUrl", url);
+		
+		List<WebPage> webPageList = webPageService.selectByExample(example);
+		if(!ServiceTools.isEmpty(webPageList)) {
+			WebPage webPage = webPageList.get(0);
+			id = webPage.getId();
+		}
+		return id;
 	}
 	
 	private boolean check(Article article) {
@@ -133,5 +158,11 @@ public class NetEaseCrawler extends WebCrawler {
 		}
 
 		return true;
+	}
+	
+	private boolean checkValidateUrl(String url) {
+		Map<String, Boolean> map = webPageService.selectUrlMap();
+		
+		return map.get(url);
 	}
 }
