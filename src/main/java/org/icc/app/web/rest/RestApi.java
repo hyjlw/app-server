@@ -47,7 +47,7 @@ public class RestApi {
 			criteria.setOracleEnd(pager.getLimit());
 			criteria.setOracleStart(pager.getStart());
 		}
-		criteria.setOrderByClause(" create_date desc, subscribe_date desc");
+		criteria.setOrderByClause(" subscribe_date desc, create_date desc");
 		if (pager.getTypeId() != null) {
 			criteria.put("typeId", pager.getTypeId());
 		}

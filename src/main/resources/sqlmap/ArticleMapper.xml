@@ -74,7 +74,7 @@
     delete from `tb_articles` where `id` = #{id}
   </delete>
   
-  <insert id="insert" parameterType="org.icc.app.pojo.Article" >
+  <insert id="insert" parameterType="org.icc.app.pojo.Article">
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="BEFORE" >
       select nextval('Article')
     </selectKey>
@@ -85,6 +85,29 @@
     #{id}, #{webId}, #{webUrl}, #{title}, #{content}, #{publisher}, STR_TO_DATE(#{publishDate}, '%Y-%m-%d %T'), STR_TO_DATE(#{createDate}, '%Y-%m-%d %T')
     )
   </insert>
+  
+  <insert id="saveImage" parameterType="org.icc.app.pojo.ArticleImage">
+  	<selectKey resultType="java.lang.Integer" keyProperty="id" order="BEFORE" >
+      select nextval('ArticleImage')
+    </selectKey>
+	INSERT INTO `tb_article_images` 
+	(`id`, 	`article_id`, 	`img_url`, 	`create_date`)
+	VALUES
+	(#{id}, #{articleId}, #{imgUrl}, STR_TO_DATE(#{createDate}, '%Y-%m-%d %T')
+	)
+  </insert>
+  
+  <update id="updateImage"  parameterType="org.icc.app.pojo.ArticleImage">
+  	UPDATE `tb_article_images` 
+	SET
+	`article_id` = #{articleId} , 
+	`img_url` = #{imgUrl} , 
+	`create_date` = STR_TO_DATE(#{createDate}, '%Y-%m-%d %T')
+	
+	WHERE
+	`id` = #{id}
+	;
+  </update>
   
   <select id="countByExample" parameterType="org.icc.app.pojo.Criteria" resultType="java.lang.Integer" >
     select count(id) from `tb_articles`
@@ -111,7 +134,7 @@
 			`a`.`title`, 
 			`a`.`content`, 
 			`a`.`publisher`, 
-			DATE_FORMAT(`a`.`publish_date`, '%Y-%m-%d %T') AS `publishDate`,
+			DATE_FORMAT(`a`.`publish_date`, '%m-%d %H-%I') AS `publishDate`,
 			`i`.`img_url` AS `imgUrl`
 	    from `tb_articles` AS `a` left outer join `tb_article_images` AS `i`
 	    on `a`.`id` = `i`.`article_id`

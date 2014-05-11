@@ -18,6 +18,8 @@ public interface ArticleService {
 	 * @return 00：失败，01：成功 ,其他情况
 	 */
 	String saveArticle(Criteria example);
+	
+	String saveArticleImage(Criteria example);
 
 	/**
 	 * 

@@ -7,6 +7,9 @@ import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Parser;
 import org.htmlparser.nodes.TagNode;
+import org.htmlparser.nodes.TextNode;
+import org.htmlparser.tags.ImageTag;
+import org.htmlparser.tags.ParagraphTag;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 
@@ -107,6 +110,66 @@ public class ParseUtils {
 	 */
 	public static <T extends TagNode> List<T> parseTags(String html,
 			final Class<T> tagType) {
-		return parseTags(html, tagType, null, null);
+		try {
+			Parser parser = new Parser();
+			parser.setInputHTML(html);
+
+			NodeList tagList = parser.parse(new NodeFilter() {
+				@Override
+				public boolean accept(Node node) {
+					return true;
+				}
+			});
+			List<T> tags = new ArrayList<T>();
+			for (int i = 0; i < tagList.size(); i++) {
+				T t = (T) tagList.elementAt(i);
+				tags.add(t);
+			}
+			return tags;
+		} catch (ParserException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+	
+	public static <T extends TextNode> List<T> parseTexts(String html,
+			final Class<T> textType) {
+		try {
+			Parser parser = new Parser();
+			parser.setInputHTML(html);
+
+			NodeList tagList = parser.parse(new NodeFilter() {
+				@Override
+				public boolean accept(Node node) {
+					return true;
+				}
+			});
+			List<T> tags = new ArrayList<T>();
+			for (int i = 0; i < tagList.size(); i++) {
+				if(tagList.elementAt(i) instanceof TextNode) {
+					T t = (T) tagList.elementAt(i);
+					tags.add(t);
+				}
+			}
+			return tags;
+		} catch (ParserException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+	
+	public static void main(String []args) {
+		String str = "<p class=\"f_center\"><img alt=\"有理由获得高人气 全新福美来M5价格快评\" src=\"http://img5.cache.netease.com/auto/2014/5/9/201405090249587357d_550.jpg\"><br></p>";
+//		String str = "<p>I love <strong>Annie</strong>!!!!</p>";
+		List<ParagraphTag> pcs = ParseUtils.parseTags(str, ParagraphTag.class);
+	
+		String imgStr = pcs.get(0).getStringText();
+		System.out.println(imgStr);
+		
+		List<ImageTag> imgs = ParseUtils.parseTags(imgStr, ImageTag.class);
+		
+		System.out.println(imgs.get(0).getImageURL());
 	}
 }

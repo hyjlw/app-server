@@ -3,6 +3,7 @@ package org.icc.app.dao;
 import java.util.List;
 
 import org.icc.app.pojo.Article;
+import org.icc.app.pojo.ArticleImage;
 import org.icc.app.pojo.Criteria;
 
 public interface ArticleMapper {
@@ -22,6 +23,10 @@ public interface ArticleMapper {
 	 * 保存记录,不管记录里面的属性是否为空
 	 */
 	int insert(Article record);
+	
+	int saveImage(ArticleImage articleImage);
+	
+	int updateImage(ArticleImage articleImage);
 
 	/**
 	 * 根据条件查询记录集

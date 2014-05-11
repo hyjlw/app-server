@@ -1,17 +1,21 @@
 package org.icc.app.crawler;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
+import org.htmlparser.nodes.TextNode;
 import org.htmlparser.tags.Div;
 import org.htmlparser.tags.HeadingTag;
+import org.htmlparser.tags.ImageTag;
 import org.htmlparser.tags.LinkTag;
 import org.htmlparser.tags.ParagraphTag;
 import org.icc.app.common.springmvc.SpringContextHolder;
 import org.icc.app.parser.ParseUtils;
 import org.icc.app.pojo.Article;
+import org.icc.app.pojo.ArticleImage;
 import org.icc.app.pojo.Criteria;
 import org.icc.app.pojo.WebPage;
 import org.icc.app.service.ArticleService;
@@ -64,75 +68,112 @@ public class NetEaseCrawler extends WebCrawler {
 		String content = "";
 		String publisher = "";
 		String dateTime = "";
+		List<String> imgs = new ArrayList<String>();
 
-		if (page.getParseData() instanceof HtmlParseData) {
-			HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
-			String html = htmlParseData.getHtml();
+		try {
+			if (page.getParseData() instanceof HtmlParseData) {
+				HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
+				String html = htmlParseData.getHtml();
+				//log.debug("Parsed html: " + html);
 
-			List<ParagraphTag> pts = ParseUtils.parseTags(html, ParagraphTag.class, "class", "ep-summary");
-			if(!ServiceTools.isEmpty(pts)) {
-				for(ParagraphTag p : pts) {
-					content = p.getStringText();
+				List<ParagraphTag> pts = ParseUtils.parseTags(html, ParagraphTag.class, "class", "ep-summary");
+				if(!ServiceTools.isEmpty(pts)) {
+					for(ParagraphTag p : pts) {
+						content = p.getStringText();
+						log.debug("content: " + content);
+					}
 				}
-			}
-			
-			if(StringUtils.isEmpty(content)) {
+				
 				List<Div> cps = ParseUtils.parseTags(html, Div.class, "id", "endText");
 				if(!ServiceTools.isEmpty(cps)) {
+					
 					String paraContent = cps.get(0).getStringText();
+					if(StringUtils.isEmpty(content)) {
+						List<TextNode> pcs = ParseUtils.parseTexts(paraContent, TextNode.class);
+						if(!ServiceTools.isEmpty(pcs)) {
+							content = pcs.get(0).getText();
+							log.debug("content: " + content);
+						}
+					}
 					
-					List<ParagraphTag> pcs = ParseUtils.parseTags(paraContent, ParagraphTag.class);
-					
+					List<ParagraphTag> pcs = ParseUtils.parseTags(paraContent, ParagraphTag.class, "class", "f_center");
 					if(!ServiceTools.isEmpty(pcs)) {
-						content = pcs.get(1).getStringText();
+						for(ParagraphTag p : pcs) {
+							String imgContent = p.getStringText();
+							log.debug("Image Content: " + imgContent);
+							
+							List<ImageTag> imgTags = ParseUtils.parseTags(imgContent, ImageTag.class);
+							
+							if(!ServiceTools.isEmpty(pcs)) {
+								imgs.add(imgTags.get(0).getImageURL());
+							}
+						}
+					}
+				}
+				
+				
+
+				List<HeadingTag> hts = ParseUtils.parseTags(html, HeadingTag.class,	"class", "ep-h1");
+				if(!ServiceTools.isEmpty(hts)) {
+					for(HeadingTag t : hts) {
+						title = t.getStringText();
+					}
+				}
+
+				List<Div> froms = ParseUtils.parseTags(html, Div.class, "class", "left");
+				if(!ServiceTools.isEmpty(froms)) {
+					String fromString = "";
+					for(Div d : froms) {
+						fromString = d.getStringText();
+					}
+					log.debug("from time string: " + fromString);
+					if(!StringUtils.isBlank(fromString)) {
+						dateTime = fromString.substring(0, 19);
+					}
+					
+					List<LinkTag> linkTags = ParseUtils.parseTags(fromString, LinkTag.class, "target", "_blank");
+					if(!ServiceTools.isEmpty(linkTags)) {
+						publisher = linkTags.get(0).getStringText();
+					}
+				}
+
+				Article article = new Article();
+				
+				String baseUrl = ServiceTools.getBaseUrl(url);
+				
+				if(checkValidateUrl(baseUrl)) {
+					article.setWebId(getWebPageId(baseUrl));
+					article.setTitle(title);
+					article.setContent(content);
+					article.setPublisher(publisher);
+					article.setPublishDate(dateTime);
+					article.setWebUrl(url);
+					article.setCreateDate(DateUtil.getCurrentDate("MM/dd/yyyy HH:mm:ss"));
+					
+					log.debug("Save Article: " + article);
+					
+					if(check(article)) {
+						Criteria example = new Criteria();
+						example.put("article", article);
+						
+						articleService.saveArticle(example);
+						
+						if(!ServiceTools.isEmpty(imgs)) {
+							for(String src : imgs) {
+								Criteria exampleImage = new Criteria();
+								ArticleImage articleImage = new ArticleImage();
+								articleImage.setArticleId(article.getId());
+								articleImage.setImgUrl(src);
+								
+								exampleImage.put("articleImage", articleImage);
+								articleService.saveArticle(exampleImage);
+							}
+						}
 					}
 				}
 			}
-
-			List<HeadingTag> hts = ParseUtils.parseTags(html, HeadingTag.class,	"class", "ep-h1");
-			if(!ServiceTools.isEmpty(hts)) {
-				for(HeadingTag t : hts) {
-					title = t.getStringText();
-				}
-			}
-
-			List<Div> froms = ParseUtils.parseTags(html, Div.class, "class", "left");
-			if(!ServiceTools.isEmpty(froms)) {
-				String fromString = "";
-				for(Div d : froms) {
-					fromString = d.getStringText();
-				}
-				
-				dateTime = fromString.substring(0, 19);
-				
-				List<LinkTag> linkTags = ParseUtils.parseTags(fromString, LinkTag.class, "target", "_blank");
-				if(!ServiceTools.isEmpty(linkTags)) {
-					publisher = linkTags.get(0).getStringText();
-				}
-			}
-
-			Article article = new Article();
-			
-			String baseUrl = ServiceTools.getBaseUrl(url);
-			
-			if(checkValidateUrl(baseUrl)) {
-				article.setWebId(getWebPageId(baseUrl));
-				article.setTitle(title);
-				article.setContent(content);
-				article.setPublisher(publisher);
-				article.setPublishDate(dateTime);
-				article.setWebUrl(url);
-				article.setCreateDate(DateUtil.getCurrentDate("MM/dd/yyyy HH:mm:ss"));
-				
-				log.info("Save Article: " + article);
-				
-				if(check(article)) {
-					Criteria example = new Criteria();
-					example.put("article", article);
-					
-					articleService.saveArticle(example);
-				}
-			}
+		} catch (Exception e) {
+			ServiceTools.logException(log, "Parsing HTML error", e);
 		}
 	}
 	
@@ -151,9 +192,9 @@ public class NetEaseCrawler extends WebCrawler {
 	}
 	
 	private boolean check(Article article) {
-		if (StringUtils.isEmpty(article.getTitle())
-				|| StringUtils.isEmpty(article.getContent())
-				|| StringUtils.isEmpty(article.getWebUrl())) {
+		if (StringUtils.isEmpty(article.getTitle().trim())
+				|| StringUtils.isEmpty(article.getContent().trim())
+				|| StringUtils.isEmpty(article.getWebUrl().trim())) {
 			return false;
 		}
 
@@ -163,6 +204,10 @@ public class NetEaseCrawler extends WebCrawler {
 	private boolean checkValidateUrl(String url) {
 		Map<String, Boolean> map = webPageService.selectUrlMap();
 		
-		return map.get(url);
+		Boolean bool = map.get(url);
+		if(bool == null) {
+			bool = false;
+		}
+		return bool;
 	}
 }

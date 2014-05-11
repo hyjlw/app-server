@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.icc.app.dao.ArticleMapper;
 import org.icc.app.pojo.Article;
+import org.icc.app.pojo.ArticleImage;
 import org.icc.app.pojo.Criteria;
 import org.icc.app.pojo.WebPage;
 import org.icc.app.queue.CrawlerManager;
@@ -98,6 +99,23 @@ public class ArticleServiceImpl implements ArticleService {
 			return list.get(0);
 		}
 		return null;
+	}
+
+	@Override
+	public String saveArticleImage(Criteria example) {
+		ArticleImage articleImage = (ArticleImage) example.get("articleImage");
+		articleImage.setCreateDate(DateUtil.getCurrentDate("yyyy-MM-dd HH:mm:ss"));
+		
+		logger.info("Save ArticleImage: " + articleImage);
+		
+		int result = 0;
+		if(articleImage.getId() == null) {
+			result = articleMapper.saveImage(articleImage);
+		} else {
+			result = articleMapper.updateImage(articleImage);
+		}
+		
+		return result > 0 ? "01" : "00";
 	}
 
 }

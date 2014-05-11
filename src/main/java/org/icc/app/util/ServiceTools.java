@@ -3,7 +3,11 @@
  */
 package org.icc.app.util;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Collection;
+
+import org.slf4j.Logger;
 
 /**
  * @author LL
@@ -18,5 +22,12 @@ public class ServiceTools {
 		int pos = url.indexOf('/', 7);
 		
 		return url.substring(0, pos + 1);
+	}
+	
+	public static void logException(Logger log, String message, Throwable cause) {
+		StringWriter stack = new StringWriter();
+		cause.printStackTrace(new PrintWriter(stack));
+		
+		log.error(message + ", Exception stackTrace: " + stack.toString());
 	}
 }
