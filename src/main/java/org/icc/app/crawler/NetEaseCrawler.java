@@ -3,6 +3,7 @@ package org.icc.app.crawler;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
@@ -83,6 +84,8 @@ public class NetEaseCrawler extends WebCrawler {
 						log.debug("content: " + content);
 					}
 				}
+				
+				content = replaceBlank(content);
 				
 				List<Div> cps = ParseUtils.parseTags(html, Div.class, "id", "endText");
 				if(!ServiceTools.isEmpty(cps)) {
@@ -209,5 +212,15 @@ public class NetEaseCrawler extends WebCrawler {
 			bool = false;
 		}
 		return bool;
+	}
+	
+	private String replaceBlank(String str) {
+		String dest = "";
+		if (str != null) {
+			Pattern p = Pattern.compile("\\s*|t|r|n");
+			Matcher m = p.matcher(str);
+			dest = m.replaceAll("");
+		}
+		return dest;
 	}
 }

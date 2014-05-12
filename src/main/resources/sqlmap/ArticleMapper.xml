@@ -134,7 +134,7 @@
 			`a`.`title`, 
 			`a`.`content`, 
 			`a`.`publisher`, 
-			DATE_FORMAT(`a`.`publish_date`, '%m-%d %H-%I') AS `publishDate`,
+			DATE_FORMAT(`a`.`publish_date`, '%m-%d %H:%I') AS `publishDate`,
 			`i`.`img_url` AS `imgUrl`
 	    from `tb_articles` AS `a` left outer join `tb_article_images` AS `i`
 	    on `a`.`id` = `i`.`article_id`
