@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="org.icc.app.dao.WebPageMapper" >
-  <resultMap id="BaseResultMap" type="org.icc.app.pojo.WebPage" >
+<mapper namespace="org.mob.app.dao.WebPageMapper" >
+  <resultMap id="BaseResultMap" type="org.mob.app.pojo.WebPage" >
     <id column="id" property="id" jdbcType="DECIMAL" />
     <result column="site_id" property="siteId" jdbcType="DECIMAL" />
     <result column="type_id" property="typeId" jdbcType="DECIMAL" />
@@ -45,7 +45,7 @@
 	DATE_FORMAT(`create_date`, '%m/%d/%Y %T') AS `createDate`
   </sql>
   
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.icc.app.pojo.Criteria" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.mob.app.pojo.Criteria" >
     <include refid="common.MySQL_Pagination_Head" />
     select
     <if test="distinct" >
@@ -74,7 +74,7 @@
     delete from `tb_web_pages` where `id` = #{id}
   </delete>
   
-  <insert id="insert" parameterType="org.icc.app.pojo.WebPage" >
+  <insert id="insert" parameterType="org.mob.app.pojo.WebPage" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="BEFORE" >
       select nextval('WebPage')
     </selectKey>
@@ -86,14 +86,14 @@
     )
   </insert>
   
-  <select id="countByExample" parameterType="org.icc.app.pojo.Criteria" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="org.mob.app.pojo.Criteria" resultType="java.lang.Integer" >
     select count(id) from `tb_web_pages`
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   
-  <update id="updateByPrimaryKey" parameterType="org.icc.app.pojo.WebPage" >
+  <update id="updateByPrimaryKey" parameterType="org.mob.app.pojo.WebPage" >
     update `tb_web_pages`
     set
     `site_id` = #{siteId},
@@ -104,7 +104,7 @@
     where `id` = #{id}
   </update>
   
-    <select id="selectAll" resultType="org.icc.app.pojo.WebPage"> 
+    <select id="selectAll" resultType="org.mob.app.pojo.WebPage"> 
     	select
 	    	`p`.`id`,
 			`site_id` AS `siteId`,
@@ -116,6 +116,7 @@
 			DATE_FORMAT(`p`.`create_date`, '%m/%d/%Y %T') AS `createDate`
 	    from `tb_web_pages` AS `p`
 	    inner join `tb_sites` AS `s` on `p`.`site_id` = `s`.`id`
+	    where `s`.`enabled` = 1
 	</select> 
 
 </mapper>

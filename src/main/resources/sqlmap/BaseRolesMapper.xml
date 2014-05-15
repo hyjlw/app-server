@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="org.icc.app.dao.BaseRolesMapper" >
-  <resultMap id="BaseResultMap" type="org.icc.app.pojo.BaseRoles" >
+<mapper namespace="org.mob.app.dao.BaseRolesMapper" >
+  <resultMap id="BaseResultMap" type="org.mob.app.pojo.BaseRoles" >
     <id column="role_id" property="roleId" jdbcType="VARCHAR" />
     <result column="role_name" property="roleName" jdbcType="VARCHAR" />
     <result column="role_desc" property="roleDesc" jdbcType="VARCHAR" />
@@ -22,7 +22,7 @@
   <sql id="Base_Column_List" >
     role_id, role_name, role_desc
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.icc.app.pojo.Criteria" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.mob.app.pojo.Criteria" >
     <include refid="common.MySQL_Pagination_Head" />
     select
     <if test="distinct" >
@@ -48,20 +48,20 @@
     delete from base_roles
     where role_id = #{roleId}
   </delete>
-  <delete id="deleteByExample" parameterType="org.icc.app.pojo.Criteria" >
+  <delete id="deleteByExample" parameterType="org.mob.app.pojo.Criteria" >
     delete from base_roles
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="org.icc.app.pojo.BaseRoles" >
+  <insert id="insert" parameterType="org.mob.app.pojo.BaseRoles" >
     <selectKey resultType="java.lang.String" keyProperty="roleId" order="BEFORE" >
       select uuid()
     </selectKey>
     insert into base_roles (role_id, role_name, role_desc)
     values (#{roleId}, #{roleName}, #{roleDesc})
   </insert>
-  <insert id="insertSelective" parameterType="org.icc.app.pojo.BaseRoles" >
+  <insert id="insertSelective" parameterType="org.mob.app.pojo.BaseRoles" >
     <selectKey resultType="java.lang.String" keyProperty="roleId" order="BEFORE" >
       select uuid()
     </selectKey>
@@ -85,7 +85,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="org.icc.app.pojo.Criteria" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="org.mob.app.pojo.Criteria" resultType="java.lang.Integer" >
     select count(*) from base_roles
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
@@ -117,7 +117,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="org.icc.app.pojo.BaseRoles" >
+  <update id="updateByPrimaryKeySelective" parameterType="org.mob.app.pojo.BaseRoles" >
     update base_roles
     <set >
       <if test="roleName != null" >
@@ -129,7 +129,7 @@
     </set>
     where role_id = #{roleId}
   </update>
-  <update id="updateByPrimaryKey" parameterType="org.icc.app.pojo.BaseRoles" >
+  <update id="updateByPrimaryKey" parameterType="org.mob.app.pojo.BaseRoles" >
     update base_roles
     set role_name = #{roleName},
       role_desc = #{roleDesc}

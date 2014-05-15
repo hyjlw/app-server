@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="org.icc.app.dao.WorshipsMapper" >
-  <resultMap id="BaseResultMap" type="org.icc.app.pojo.Worship" >
+<mapper namespace="org.mob.app.dao.WorshipsMapper" >
+  <resultMap id="BaseResultMap" type="org.mob.app.pojo.Worship" >
     <id column="id" property="id" jdbcType="DECIMAL" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="content" property="content" jdbcType="VARCHAR" />
@@ -26,7 +26,7 @@
     `id`, `name`, `content`, `remark`
   </sql>
   
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.icc.app.pojo.Criteria" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.mob.app.pojo.Criteria" >
     <include refid="common.MySQL_Pagination_Head" />
     select
     <if test="distinct" >
@@ -55,7 +55,7 @@
     delete from `tb_worships` where `id` = #{id}
   </delete>
   
-  <insert id="insert" parameterType="org.icc.app.pojo.Worship" >
+  <insert id="insert" parameterType="org.mob.app.pojo.Worship" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="BEFORE" >
       select nextval('Worship')
     </selectKey>
@@ -67,14 +67,14 @@
     )
   </insert>
   
-  <select id="countByExample" parameterType="org.icc.app.pojo.Criteria" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="org.mob.app.pojo.Criteria" resultType="java.lang.Integer" >
     select count(*) from `tb_worships`
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   
-  <update id="updateByPrimaryKey" parameterType="org.icc.app.pojo.Worship" >
+  <update id="updateByPrimaryKey" parameterType="org.mob.app.pojo.Worship" >
     update `tb_worships`
     set `name` = #{name},
       `content` = #{content},

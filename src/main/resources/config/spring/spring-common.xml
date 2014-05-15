@@ -12,7 +12,7 @@
 
 	<!-- 自动搜索@Component , @Service , @Repository等标注的类 不搜索@Controller的类 -->
 	<!-- 自动扫描组件，这里要把web下面的 controller去除，他们是在spring3-servlet.xml中配置的，如果不去除会影响事务管理的。 -->
-	<context:component-scan base-package="org.icc.app" annotation-config="true">
+	<context:component-scan base-package="org.mob.app" annotation-config="true">
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
 	
@@ -24,7 +24,7 @@
 	<context:property-placeholder location="classpath:/config/ibatis/jdbc.properties,classpath:/config/others/config.properties" />
 	
 	<!-- 用于持有ApplicationContext,可以使用SpringContextHolder.getBean('xxxx')的静态方法得到spring bean对象 -->
-	<bean class="org.icc.app.common.springmvc.SpringContextHolder" lazy-init="false" />
+	<bean class="org.mob.app.common.springmvc.SpringContextHolder" lazy-init="false" />
 	
 	<!-- 数据连接事务 -->
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
@@ -35,12 +35,12 @@
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="c3p0" />
 		<property name="configLocation" value="classpath:/config/ibatis/mybatis-config.xml" />
-		<property name="typeAliasesPackage" value="org.icc.app.pojo" />
+		<property name="typeAliasesPackage" value="org.mob.app.pojo" />
 	</bean>
 
 	<!-- mybatis接口 -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="org.icc.app.dao" />
+		<property name="basePackage" value="org.mob.app.dao" />
 	</bean>
 
 	<!-- 连接事务的注解配置 -->

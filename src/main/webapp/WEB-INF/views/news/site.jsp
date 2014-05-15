@@ -43,7 +43,7 @@ site.store = new Ext.data.Store({
 			reader : new Ext.data.JsonReader({// 数据读取器
 				totalProperty : 'results', // 记录总数
 				root : 'rows' // Json中的列表数据根节点
-			}, ['id', 'name', 'crawlerClass', 'siteUrl', 'createDate']),
+			}, ['id', 'name', 'crawlerClass', 'siteUrl', 'enabled', 'createDate']),
 			listeners : {
 				'load' : function(store, records, options) {
 					site.alwaysFun();
@@ -82,6 +82,12 @@ site.colModel = new Ext.grid.ColumnModel({
 					}, {
 						header : '网址',
 						dataIndex : 'siteUrl'
+					}, {
+						header : '启用',
+						dataIndex : 'enabled',
+						renderer : function(v) {
+							return Share.map(v, site.ENABLED , '');
+						}
 					}, {
 						header : '日期',
 						dataIndex : 'createDate'
@@ -154,6 +160,24 @@ site.grid = new Ext.grid.GridPanel({
 			listeners : {},
 			viewConfig : {}
 		});
+
+site.enabledCombo = new Ext.form.ComboBox({
+	fieldLabel : '是否启用',
+	hiddenName : 'enabled',
+	name : 'enabled',
+	triggerAction : 'all',
+	mode : 'local',
+	store : new Ext.data.ArrayStore({
+				fields : ['v', 't'],
+				data : Share.map2Ary(site.ENABLED)
+			}),
+	valueField : 'v',
+	displayField : 't',
+	allowBlank : false,
+	editable : false,
+	anchor : '99%'
+});
+
 /** 基本信息-详细信息的form */
 site.formPanel = new Ext.form.FormPanel({
 			frame : false,
@@ -184,13 +208,13 @@ site.formPanel = new Ext.form.FormPanel({
 						allowBlank : false,
 						name : 'siteUrl',
 						anchor : '99%'
-					}]
+					}, site.enabledCombo]
 		});
 /** 编辑新建窗口 */
 site.addWindow = new Ext.Window({
 			layout : 'fit',
 			width : 420,
-			height : 180,
+			height : 210,
 			closeAction : 'hide',
 			plain : true,
 			modal : true,

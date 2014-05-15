@@ -82,14 +82,12 @@ type.colModel = new Ext.grid.ColumnModel({
 						renderer : function(v) {
 							return Share.map(v,type.ENABLED , '');
 						}
-						
 					}, {
 						header : '订阅',
 						dataIndex : 'isSubscribe',
 						renderer : function(v) {
 							return Share.map(v,type.ENABLED , '');
 						}
-						
 					}, {
 						header : '日期',
 						dataIndex : 'createDate'

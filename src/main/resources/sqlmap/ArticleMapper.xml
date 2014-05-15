@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="org.icc.app.dao.ArticleMapper" >
-  <resultMap id="BaseResultMap" type="org.icc.app.pojo.Article" >
+<mapper namespace="org.mob.app.dao.ArticleMapper" >
+  <resultMap id="BaseResultMap" type="org.mob.app.pojo.Article" >
     <id column="id" property="id" jdbcType="DECIMAL" />
     <result column="web_id" property="webId" jdbcType="DECIMAL" />
     <result column="web_url" property="webUrl" jdbcType="VARCHAR" />
@@ -45,7 +45,7 @@
 	DATE_FORMAT(`create_date`, '%Y-%m-%d %T') AS `createDate`
   </sql>
   
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.icc.app.pojo.Criteria" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.mob.app.pojo.Criteria" >
     <include refid="common.MySQL_Pagination_Head" />
     select
     <if test="distinct" >
@@ -74,7 +74,7 @@
     delete from `tb_articles` where `id` = #{id}
   </delete>
   
-  <insert id="insert" parameterType="org.icc.app.pojo.Article">
+  <insert id="insert" parameterType="org.mob.app.pojo.Article">
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="BEFORE" >
       select nextval('Article')
     </selectKey>
@@ -86,7 +86,7 @@
     )
   </insert>
   
-  <insert id="saveImage" parameterType="org.icc.app.pojo.ArticleImage">
+  <insert id="saveImage" parameterType="org.mob.app.pojo.ArticleImage">
   	<selectKey resultType="java.lang.Integer" keyProperty="id" order="BEFORE" >
       select nextval('ArticleImage')
     </selectKey>
@@ -97,7 +97,7 @@
 	)
   </insert>
   
-  <update id="updateImage"  parameterType="org.icc.app.pojo.ArticleImage">
+  <update id="updateImage"  parameterType="org.mob.app.pojo.ArticleImage">
   	UPDATE `tb_article_images` 
 	SET
 	`article_id` = #{articleId} , 
@@ -109,14 +109,14 @@
 	;
   </update>
   
-  <select id="countByExample" parameterType="org.icc.app.pojo.Criteria" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="org.mob.app.pojo.Criteria" resultType="java.lang.Integer" >
     select count(id) from `tb_articles`
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   
-  <update id="updateByPrimaryKey" parameterType="org.icc.app.pojo.Article" >
+  <update id="updateByPrimaryKey" parameterType="org.mob.app.pojo.Article" >
     update `tb_articles`
     set
     `web_id` = #{webId},
@@ -127,7 +127,7 @@
     where `id` = #{id}
   </update>
   
-    <select id="selectByCriteria" resultMap="articleOut" parameterType="org.icc.app.pojo.Criteria"> 
+    <select id="selectByCriteria" resultMap="articleOut" parameterType="org.mob.app.pojo.Criteria"> 
     	select
     	 	`a`.`id` AS `id`,
 	    	`a`.`web_url` AS `webUrl`, 
@@ -150,7 +150,7 @@
 	    <include refid="common.MySQL_Pagination_Tail" />
 	</select> 
 	
-	<resultMap type="org.icc.app.pojo.Article" id="articleOut">
+	<resultMap type="org.mob.app.pojo.Article" id="articleOut">
 		<result column="id" property="id" />
 		<result column="webUrl" property="webUrl" />
 	    <result column="title" property="title" />
@@ -160,7 +160,7 @@
 	    <collection property="imgs" resultMap="articleImgs" />
 	</resultMap>
 
-	<resultMap type="org.icc.app.pojo.ArticleImage" id="articleImgs">
+	<resultMap type="org.mob.app.pojo.ArticleImage" id="articleImgs">
 		<result column="imgUrl" property="imgUrl" />
 	</resultMap>
 </mapper>

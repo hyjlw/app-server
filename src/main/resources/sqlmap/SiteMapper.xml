@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="org.icc.app.dao.SiteMapper" >
-  <resultMap id="BaseResultMap" type="org.icc.app.pojo.Site" >
+<mapper namespace="org.mob.app.dao.SiteMapper" >
+  <resultMap id="BaseResultMap" type="org.mob.app.pojo.Site" >
     <id column="id" property="id" jdbcType="DECIMAL" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="crawler_class" property="crawlerClass" jdbcType="VARCHAR" />
     <result column="site_url" property="siteUrl" jdbcType="VARCHAR" />
+    <result column="enabled" property="enabled" jdbcType="DECIMAL" />
     <result column="create_date" property="createDate" jdbcType="VARCHAR" />
   </resultMap>
   
@@ -28,6 +29,7 @@
     `name`,
     `crawler_class`,
 	`site_url`,
+	`enabled`,
 	`create_date`
   </sql>
   
@@ -36,10 +38,11 @@
 	`name`,
 	`crawler_class` AS `crawlerClass`,
 	`site_url` AS `siteUrl`,
+	`enabled`,
 	DATE_FORMAT(`create_date`, '%m/%d/%Y %T') AS `createDate`
   </sql>
   
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.icc.app.pojo.Criteria" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.mob.app.pojo.Criteria" >
     <include refid="common.MySQL_Pagination_Head" />
     select
     <if test="distinct" >
@@ -68,7 +71,7 @@
     delete from `tb_sites` where `id` = #{id}
   </delete>
   
-  <insert id="insert" parameterType="org.icc.app.pojo.News" >
+  <insert id="insert" parameterType="org.mob.app.pojo.News" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="BEFORE" >
       select nextval('Site')
     </selectKey>
@@ -76,27 +79,28 @@
     	<include refid="Base_Column_List" />
     )
     values (
-    #{id}, #{name}, #{crawlerClass}, #{siteUrl}, STR_TO_DATE(#{createDate}, '%m/%d/%Y %T')
+    #{id}, #{name}, #{crawlerClass}, #{siteUrl}, #{enabled}, STR_TO_DATE(#{createDate}, '%m/%d/%Y %T')
     )
   </insert>
   
-  <select id="countByExample" parameterType="org.icc.app.pojo.Criteria" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="org.mob.app.pojo.Criteria" resultType="java.lang.Integer" >
     select count(*) from `tb_sites`
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   
-  <update id="updateByPrimaryKey" parameterType="org.icc.app.pojo.Site" >
+  <update id="updateByPrimaryKey" parameterType="org.mob.app.pojo.Site" >
     update `tb_sites`
     set
     `name` = #{name},
     `crawler_class` = #{crawlerClass},
-	`site_url` = #{siteUrl}
+	`site_url` = #{siteUrl},
+	`enabled` = #{enabled}
     where `id` = #{id}
   </update>
   
-    <select id="selectAll" resultType="org.icc.app.pojo.Site"> 
+    <select id="selectAll" resultType="org.mob.app.pojo.Site"> 
     	select
 	    	<include refid="Select_Column_List" />
 	    from `tb_sites`

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="org.icc.app.dao.BaseModulesMapper" >
-  <resultMap id="BaseResultMap" type="org.icc.app.pojo.BaseModules" >
+<mapper namespace="org.mob.app.dao.BaseModulesMapper" >
+  <resultMap id="BaseResultMap" type="org.mob.app.pojo.BaseModules" >
     <id column="module_id" property="moduleId" jdbcType="DECIMAL" />
     <result column="module_name" property="moduleName" jdbcType="VARCHAR" />
     <result column="module_url" property="moduleUrl" jdbcType="VARCHAR" />
@@ -56,7 +56,7 @@
     en_module_name, icon_css, information
   </sql>
   <!-- 根据用户ID查询系统菜单 -->
-  <select id="selectMyModules" resultMap="BaseResultMap" parameterType="org.icc.app.pojo.Criteria" >
+  <select id="selectMyModules" resultMap="BaseResultMap" parameterType="org.mob.app.pojo.Criteria" >
 	SELECT  
 		<if test="distinct" >
 	      distinct
@@ -91,7 +91,7 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.icc.app.pojo.Criteria" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.mob.app.pojo.Criteria" >
     <include refid="common.MySQL_Pagination_Head" />
     select
     <if test="distinct" >
@@ -108,7 +108,7 @@
     <include refid="common.MySQL_Pagination_Tail" />
   </select>
   <!-- 动态sql，最好不要带外部参数拼装进来，防止SQL注入 -->
-  <select id="selectByDynamicSql" parameterType="org.icc.app.pojo.Criteria"
+  <select id="selectByDynamicSql" parameterType="org.mob.app.pojo.Criteria"
 	resultType="java.util.HashMap">
 		<![CDATA[ ${condition.dynamicSql} ]]>
   </select>
@@ -122,13 +122,13 @@
     delete from base_modules
     where module_id = #{moduleId}
   </delete>
-  <delete id="deleteByExample" parameterType="org.icc.app.pojo.Criteria" >
+  <delete id="deleteByExample" parameterType="org.mob.app.pojo.Criteria" >
     delete from base_modules
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="org.icc.app.pojo.BaseModules" >
+  <insert id="insert" parameterType="org.mob.app.pojo.BaseModules" >
   	<selectKey resultType="java.lang.Integer" keyProperty="moduleId" order="BEFORE" >
       select nextval('ModuleSeq')
     </selectKey>
@@ -137,7 +137,7 @@
     values (#{moduleId}, #{moduleName}, #{moduleUrl}, #{parentId}, #{leaf}, #{expanded}, 
       #{displayIndex}, #{isDisplay}, #{enModuleName}, #{iconCss}, #{information})
   </insert>
-  <insert id="insertSelective" parameterType="org.icc.app.pojo.BaseModules" >
+  <insert id="insertSelective" parameterType="org.mob.app.pojo.BaseModules" >
   	<selectKey resultType="java.lang.Integer" keyProperty="moduleId" order="BEFORE" >
       select nextval('ModuleSeq')
     </selectKey>
@@ -209,7 +209,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="org.icc.app.pojo.Criteria" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="org.mob.app.pojo.Criteria" resultType="java.lang.Integer" >
     select count(*) from base_modules
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
@@ -273,7 +273,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="org.icc.app.pojo.BaseModules" >
+  <update id="updateByPrimaryKeySelective" parameterType="org.mob.app.pojo.BaseModules" >
     update base_modules
     <set >
       <if test="moduleName != null" >
@@ -309,7 +309,7 @@
     </set>
     where module_id = #{moduleId}
   </update>
-  <update id="updateByPrimaryKey" parameterType="org.icc.app.pojo.BaseModules" >
+  <update id="updateByPrimaryKey" parameterType="org.mob.app.pojo.BaseModules" >
     update base_modules
     set module_name = #{moduleName},
       module_url = #{moduleUrl},

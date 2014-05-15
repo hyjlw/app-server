@@ -10,7 +10,7 @@
 	default-lazy-init="true">
 
 	<!-- 只搜索@Controller 标注的类 不搜索其他标注的类 -->
-	<context:component-scan base-package="org.icc.app" use-default-filters="false">
+	<context:component-scan base-package="org.mob.app" use-default-filters="false">
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
 
@@ -29,7 +29,7 @@
 	</bean>
 
 	<!-- 用于持有applicationProperties,将properties转变为静态方法使用,PropertiesHolder.getProperty("somekey") -->
-	<bean class="org.icc.app.common.utils.PropertiesHolder">
+	<bean class="org.mob.app.common.utils.PropertiesHolder">
 		<property name="properties" ref="applicationProperties" />
 	</bean>
 
@@ -80,7 +80,7 @@
 			<mvc:mapping path="/type**/**" />
 			<mvc:mapping path="/page**/**" />
 			<mvc:mapping path="/article**/**" />
-			<bean class="org.icc.app.web.interseptor.LoginInterceptor"></bean>
+			<bean class="org.mob.app.web.interseptor.LoginInterceptor"></bean>
 		</mvc:interceptor>
 	</mvc:interceptors>
 

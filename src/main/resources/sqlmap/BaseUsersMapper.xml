@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="org.icc.app.dao.BaseUsersMapper" >
-  <resultMap id="BaseResultMap" type="org.icc.app.pojo.BaseUsers" >
+<mapper namespace="org.mob.app.dao.BaseUsersMapper" >
+  <resultMap id="BaseResultMap" type="org.mob.app.pojo.BaseUsers" >
     <id column="user_id" property="userId" jdbcType="VARCHAR" />
     <result column="account" property="account" jdbcType="VARCHAR" />
     <result column="password" property="password" jdbcType="VARCHAR" />
@@ -62,7 +62,7 @@
     user_id, account, password, real_name, sex, email, mobile, office_phone, error_count, 
     date_format(last_login_time, '%Y-%m-%d %T') last_login_time, last_login_ip, remark
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.icc.app.pojo.Criteria" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.mob.app.pojo.Criteria" >
     <include refid="common.MySQL_Pagination_Head" />
     select
     <if test="distinct" >
@@ -88,13 +88,13 @@
     delete from base_users
     where user_id = #{userId}
   </delete>
-  <delete id="deleteByExample" parameterType="org.icc.app.pojo.Criteria" >
+  <delete id="deleteByExample" parameterType="org.mob.app.pojo.Criteria" >
     delete from base_users
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="org.icc.app.pojo.BaseUsers" >
+  <insert id="insert" parameterType="org.mob.app.pojo.BaseUsers" >
     <selectKey resultType="java.lang.String" keyProperty="userId" order="BEFORE" >
       select uuid()
     </selectKey>
@@ -103,7 +103,7 @@
     values (#{userId}, #{account}, #{password}, #{realName}, #{sex}, #{email}, #{mobile}, 
       #{officePhone}, #{errorCount}, #{lastLoginTime}, #{lastLoginIp}, #{remark})
   </insert>
-  <insert id="insertSelective" parameterType="org.icc.app.pojo.BaseUsers" >
+  <insert id="insertSelective" parameterType="org.mob.app.pojo.BaseUsers" >
     <selectKey resultType="java.lang.String" keyProperty="userId" order="BEFORE" >
       select uuid()
     </selectKey>
@@ -181,7 +181,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="org.icc.app.pojo.Criteria" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="org.mob.app.pojo.Criteria" resultType="java.lang.Integer" >
     select count(*) from base_users
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
@@ -249,7 +249,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="org.icc.app.pojo.BaseUsers" >
+  <update id="updateByPrimaryKeySelective" parameterType="org.mob.app.pojo.BaseUsers" >
     update base_users
     <set >
       <if test="account != null" >
@@ -288,7 +288,7 @@
     </set>
     where user_id = #{userId}
   </update>
-  <update id="updateByPrimaryKey" parameterType="org.icc.app.pojo.BaseUsers" >
+  <update id="updateByPrimaryKey" parameterType="org.mob.app.pojo.BaseUsers" >
     update base_users
     set account = #{account},
       password = #{password},

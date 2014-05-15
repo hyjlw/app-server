@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="org.icc.app.dao.NewsMapper" >
-  <resultMap id="BaseResultMap" type="org.icc.app.pojo.NewsExt" >
+<mapper namespace="org.mob.app.dao.NewsMapper" >
+  <resultMap id="BaseResultMap" type="org.mob.app.pojo.NewsExt" >
     <id column="id" property="id" jdbcType="DECIMAL" />
     <result column="parent_id" property="parent_id" jdbcType="DECIMAL" />
     <result column="title" property="title" jdbcType="VARCHAR" />
@@ -80,7 +80,7 @@
 	`path_thumbnail`
   </sql>
   
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.icc.app.pojo.Criteria" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.mob.app.pojo.Criteria" >
     <include refid="common.MySQL_Pagination_Head" />
     select
     <if test="distinct" >
@@ -109,7 +109,7 @@
     delete from `tb_news_categories` where `id` = #{id}
   </delete>
   
-  <insert id="insert" parameterType="org.icc.app.pojo.News" >
+  <insert id="insert" parameterType="org.mob.app.pojo.News" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="BEFORE" >
       select nextval('News')
     </selectKey>
@@ -121,14 +121,14 @@
     )
   </insert>
   
-  <select id="countByExample" parameterType="org.icc.app.pojo.Criteria" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="org.mob.app.pojo.Criteria" resultType="java.lang.Integer" >
     select count(*) from `tb_news_categories`
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   
-  <update id="updateByPrimaryKey" parameterType="org.icc.app.pojo.News" >
+  <update id="updateByPrimaryKey" parameterType="org.mob.app.pojo.News" >
     update `tb_news_categories`
     set
     `parent_id` = #{parent_id},
@@ -158,7 +158,7 @@
 	    where `enabled` = 1
 	    order by `sort`, `id`
 	</select> 
-	<resultMap type="org.icc.app.pojo.News" id="getAllNewsMap"> 
+	<resultMap type="org.mob.app.pojo.News" id="getAllNewsMap"> 
 		<id column="id" property="id" jdbcType="DECIMAL" />
 	    <result column="title" property="title" jdbcType="VARCHAR" />
 	    <result column="domain" property="domain" jdbcType="VARCHAR" />
@@ -177,7 +177,7 @@
 	    <result column="path_thumbnail" property="path_thumbnail" jdbcType="VARCHAR" />
 		<collection property="children" column="id" select="getSubNewsByParentId"/> 
 	</resultMap> 
-	<select id="getSubNewsByParentId" parameterType="Integer" resultType="org.icc.app.pojo.News"> 
+	<select id="getSubNewsByParentId" parameterType="Integer" resultType="org.mob.app.pojo.News"> 
 	    select
 	    	<include refid="Select_Column_List" />
 	    from `tb_news_categories`
