@@ -15,6 +15,7 @@ public class WebPage {
 	private String storageFolder;
 	private String webUrl;
 	private String crawlerClass;
+	private Integer enabled;
 	private String createDate;
 	/**
 	 * @return the id
@@ -99,6 +100,18 @@ public class WebPage {
 	 */
 	public void setCrawlerClass(String crawlerClass) {
 		this.crawlerClass = crawlerClass;
+	}
+	/**
+	 * @return the enabled
+	 */
+	public Integer getEnabled() {
+		return enabled;
+	}
+	/**
+	 * @param enabled the enabled to set
+	 */
+	public void setEnabled(Integer enabled) {
+		this.enabled = enabled;
 	}
 	/**
 	 * @return the createDate

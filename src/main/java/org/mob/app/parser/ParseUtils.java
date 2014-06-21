@@ -122,8 +122,10 @@ public class ParseUtils {
 			});
 			List<T> tags = new ArrayList<T>();
 			for (int i = 0; i < tagList.size(); i++) {
-				T t = (T) tagList.elementAt(i);
-				tags.add(t);
+				if(tagList.elementAt(i) instanceof TagNode) {
+					T t = (T) tagList.elementAt(i);
+					tags.add(t);
+				}
 			}
 			return tags;
 		} catch (ParserException e) {
@@ -161,9 +163,10 @@ public class ParseUtils {
 	}
 	
 	public static void main(String []args) {
-		String str = "<p class=\"f_center\"><img alt=\"有理由获得高人气 全新福美来M5价格快评\" src=\"http://img5.cache.netease.com/auto/2014/5/9/201405090249587357d_550.jpg\"><br></p>";
+		String str = "<p>dasfasf,gsdfgsdfg</p><p class=\"f_center\"><img alt=\"有理由获得高人气 全新福美来M5价格快评\" src=\"http://img5.cache.netease.com/auto/2014/5/9/201405090249587357d_550.jpg\"></p>";
 //		String str = "<p>I love <strong>Annie</strong>!!!!</p>";
-		List<ParagraphTag> pcs = ParseUtils.parseTags(str, ParagraphTag.class);
+//		List<ParagraphTag> pcs = ParseUtils.parseTags(str, ParagraphTag.class);
+		List<ParagraphTag> pcs = ParseUtils.parseTags(str, ParagraphTag.class, "class", "f_center");
 	
 		String imgStr = pcs.get(0).getStringText();
 		System.out.println(imgStr);
@@ -171,5 +174,16 @@ public class ParseUtils {
 		List<ImageTag> imgs = ParseUtils.parseTags(imgStr, ImageTag.class);
 		
 		System.out.println(imgs.get(0).getImageURL());
+		
+		String imgSrc = "<img alt=\"左边的截图可以看到游戏的战斗画面\" src=\"http://img2.cache.netease.com/game/2014/5/6/20140506145453d3679.jpg\" /><br  />左边的截图可以看到游戏的战斗画面";
+		String strIndex = "src=\"";
+		int index = imgSrc.indexOf(strIndex) + strIndex.length();
+		int next = imgSrc.indexOf("\"", index);
+		
+		System.out.println(index + ", " + next);
+		
+		String src = imgSrc.substring(index, next);
+		
+		System.out.println(src);
 	}
 }

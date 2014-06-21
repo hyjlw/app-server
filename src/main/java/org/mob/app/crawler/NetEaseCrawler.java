@@ -10,7 +10,6 @@ import org.apache.commons.lang.StringUtils;
 import org.htmlparser.nodes.TextNode;
 import org.htmlparser.tags.Div;
 import org.htmlparser.tags.HeadingTag;
-import org.htmlparser.tags.ImageTag;
 import org.htmlparser.tags.LinkTag;
 import org.htmlparser.tags.ParagraphTag;
 import org.mob.app.common.springmvc.SpringContextHolder;
@@ -81,7 +80,7 @@ public class NetEaseCrawler extends WebCrawler {
 				if(!ServiceTools.isEmpty(pts)) {
 					for(ParagraphTag p : pts) {
 						content = p.getStringText();
-						log.debug("content: " + content);
+						log.info("content: " + content);
 					}
 				}
 				
@@ -89,31 +88,27 @@ public class NetEaseCrawler extends WebCrawler {
 				
 				List<Div> cps = ParseUtils.parseTags(html, Div.class, "id", "endText");
 				if(!ServiceTools.isEmpty(cps)) {
-					
 					String paraContent = cps.get(0).getStringText();
-					if(StringUtils.isEmpty(content)) {
+					log.info("Page's paraContent: " + paraContent);
+					if(StringUtils.isBlank(content)) {
 						List<TextNode> pcs = ParseUtils.parseTexts(paraContent, TextNode.class);
 						if(!ServiceTools.isEmpty(pcs)) {
 							content = pcs.get(0).getText();
-							log.debug("content: " + content);
 						}
 					}
+					log.info("final content: " + content);
 					
 					List<ParagraphTag> pcs = ParseUtils.parseTags(paraContent, ParagraphTag.class, "class", "f_center");
+					log.info("ParagraphTag: " + pcs.size());
 					if(!ServiceTools.isEmpty(pcs)) {
 						for(ParagraphTag p : pcs) {
 							String imgContent = p.getStringText();
-							log.debug("Image Content: " + imgContent);
-							
-							List<ImageTag> imgTags = ParseUtils.parseTags(imgContent, ImageTag.class);
-							
-							if(!ServiceTools.isEmpty(pcs)) {
-								imgs.add(imgTags.get(0).getImageURL());
-							}
+							log.info("Image Content: " + imgContent);
+							imgs.add(getImageUrl(imgContent));
 						}
 					}
 				}
-				
+				log.info("images for the page: " + imgs);
 				
 
 				List<HeadingTag> hts = ParseUtils.parseTags(html, HeadingTag.class,	"class", "ep-h1");
@@ -129,7 +124,7 @@ public class NetEaseCrawler extends WebCrawler {
 					for(Div d : froms) {
 						fromString = d.getStringText();
 					}
-					log.debug("from time string: " + fromString);
+					log.info("from time string: " + fromString);
 					if(!StringUtils.isBlank(fromString)) {
 						dateTime = fromString.substring(0, 19);
 					}
@@ -153,13 +148,14 @@ public class NetEaseCrawler extends WebCrawler {
 					article.setWebUrl(url);
 					article.setCreateDate(DateUtil.getCurrentDate("MM/dd/yyyy HH:mm:ss"));
 					
-					log.debug("Save Article: " + article);
+					log.info("Save Article: " + article);
 					
 					if(check(article)) {
 						Criteria example = new Criteria();
 						example.put("article", article);
 						
 						articleService.saveArticle(example);
+						log.info("Saved Article's id: " + article.getId());
 						
 						if(!ServiceTools.isEmpty(imgs)) {
 							for(String src : imgs) {
@@ -168,8 +164,9 @@ public class NetEaseCrawler extends WebCrawler {
 								articleImage.setArticleId(article.getId());
 								articleImage.setImgUrl(src);
 								
+								log.info("+++++++++save article image+++++++++" + articleImage.getImgUrl());
 								exampleImage.put("articleImage", articleImage);
-								articleService.saveArticle(exampleImage);
+								articleService.saveArticleImage(exampleImage);
 							}
 						}
 					}
@@ -222,5 +219,22 @@ public class NetEaseCrawler extends WebCrawler {
 			dest = m.replaceAll("");
 		}
 		return dest;
+	}
+	
+	private String getImageUrl(String imgNode) {
+		log.info("--------image node-------" + imgNode);
+		
+		int start = 0;
+		int end = 0;
+		String res = "";
+		String strIndex = "src=\"";
+		start = imgNode.indexOf(strIndex) + strIndex.length();
+		if(start > 0) {
+			end = imgNode.indexOf("\"", start);
+			
+			res = imgNode.substring(start, end);
+		}
+		
+		return res;
 	}
 }

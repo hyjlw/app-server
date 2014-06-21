@@ -3,7 +3,6 @@
  */
 package org.mob.app.queue;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -57,31 +56,25 @@ public class CrawlerManager {
 	public void addQueue(List<WebPage> items) {
 		log.info("Adding to consumer: " + items.size());
 		
-		Consumer c = new Consumer(items);
-		threadPool.execute(c);
+		for(WebPage item : items) {
+			Consumer c = new Consumer(item);
+			threadPool.execute(c);
+		}
 	}
 	
 	
 	private static class Consumer implements Runnable {
 		
-		private List<WebPage> items = null;
+		private WebPage item = null;
 		
-		public Consumer(List<WebPage> items) {
-			this.items = items;
-			
-			Iterator<WebPage> itr = this.items.iterator(); 
-			while(itr.hasNext()) {
-				WebPage p = itr.next();
-				if(StringUtils.isBlank(p.getWebUrl())) {
-					itr.remove();
-				}
-			}
+		public Consumer(WebPage item) {
+			this.item = item;
 		}
 
 		@Override
 		public void run() {
-			for(WebPage page : items) {
-				String crawlStorageFolder = "/tmp/data/crawl" + page.getStorageFolder();
+			if(item != null && !StringUtils.isBlank(item.getWebUrl())) {
+				String crawlStorageFolder = "/tmp/data/crawl" + item.getStorageFolder();
 				log.info("Set storage folder to: " + crawlStorageFolder);
 				
 		        int numberOfCrawlers = 7;
@@ -104,14 +97,14 @@ public class CrawlerManager {
 					 * URLs that are fetched and then the crawler starts following links
 					 * which are found in these pages
 					 */
-					log.info("Adding seed: " + page.getWebUrl());
-					controller.addSeed(page.getWebUrl());
+					log.info("Adding seed: " + item.getWebUrl());
+					controller.addSeed(item.getWebUrl());
 
 					/*
 					 * Start the crawl. This is a blocking operation, meaning that your code
 					 * will reach the line after this only when crawling is finished.
 					 */
-					String crawler = page.getCrawlerClass();
+					String crawler = item.getCrawlerClass();
 					log.info("Setting crawler: " + crawler);
 					controller.start((Class<WebCrawler>)Class.forName(crawler), numberOfCrawlers);
 				} catch (Exception e) {

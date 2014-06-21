@@ -8,6 +8,7 @@
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="storage_folder" property="storageFolder" jdbcType="VARCHAR" />
     <result column="web_url" property="webUrl" jdbcType="VARCHAR" />
+    <result column="enabled" property="enabled" jdbcType="DECIMAL" />
     <result column="create_date" property="createDate" jdbcType="VARCHAR" />
   </resultMap>
   
@@ -32,6 +33,7 @@
     `name`,
     `storage_folder`,
 	`web_url`,
+	`enabled`,
 	`create_date`
   </sql>
   
@@ -42,6 +44,7 @@
 	`name`,
 	`storage_folder` AS `storageFolder`,
 	`web_url` AS `webUrl`,
+	`enabled`,
 	DATE_FORMAT(`create_date`, '%m/%d/%Y %T') AS `createDate`
   </sql>
   
@@ -82,7 +85,7 @@
     	<include refid="Base_Column_List" />
     )
     values (
-    #{id}, #{siteId}, #{typeId}, #{name}, #{storageFolder}, #{webUrl}, STR_TO_DATE(#{createDate}, '%m/%d/%Y %T')
+    #{id}, #{siteId}, #{typeId}, #{name}, #{storageFolder}, #{webUrl}, #{enabled}, STR_TO_DATE(#{createDate}, '%m/%d/%Y %T')
     )
   </insert>
   
@@ -100,7 +103,8 @@
     `type_id` = #{typeId},
     `name` = #{name},
     `storage_folder` = #{storageFolder},
-	`web_url` = #{webUrl}
+	`web_url` = #{webUrl},
+	`enabled` = #{enabled}
     where `id` = #{id}
   </update>
   
@@ -116,7 +120,7 @@
 			DATE_FORMAT(`p`.`create_date`, '%m/%d/%Y %T') AS `createDate`
 	    from `tb_web_pages` AS `p`
 	    inner join `tb_sites` AS `s` on `p`.`site_id` = `s`.`id`
-	    where `s`.`enabled` = 1
+	    where `s`.`enabled` = 1 and `p`.`enabled` = 1
 	</select> 
 
 </mapper>
