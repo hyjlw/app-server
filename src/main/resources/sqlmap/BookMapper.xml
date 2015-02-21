@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.mob.app.dao.BookMapper" >
+  <resultMap id="BaseResultMap" type="org.mob.app.pojo.Book" >
+    <id column="id" property="id" jdbcType="DECIMAL" />
+    <result column="name" property="name" jdbcType="DECIMAL" />
+    <result column="edition" property="edition" jdbcType="VARCHAR" />
+    <result column="isbn" property="isbn" jdbcType="VARCHAR" />
+    <result column="author" property="author" jdbcType="VARCHAR" />
+    <result column="translator" property="translator" jdbcType="VARCHAR" />
+    <result column="publisher" property="publisher" jdbcType="VARCHAR" />
+    <result column="publishDate" property="publishDate" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="VARCHAR" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="createDate" property="createDate" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Example_Where_Clause" >
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="condition.id != null" >
+         and id = #{condition.id}
+      </if>
+      <if test="condition.titleLike != null" >
+       <![CDATA[ and name LIKE CONCAT(CONCAT('%', #{condition.nameLike}), '%') ]]>
+      </if>
+    </trim>
+  </sql>
+  
+  <sql id="Base_Column_List" >
+    `id`, 
+	`name`, 
+	`edition`, 
+	`isbn`, 
+	`author`, 
+	`translator`, 
+	`publisher`, 
+	`publish_date`, 
+	`price`, 
+	`remarks`,
+	`create_date`
+  </sql>
+  
+  <sql id="Select_Column_List" >
+    `id`, 
+	`name`, 
+	`edition`, 
+	`isbn`, 
+	`author`, 
+	`translator`, 
+	`publisher`, 
+	`publish_date` AS `publishDate`, 
+	`price`, 
+	`remarks`,
+	DATE_FORMAT(`create_date`, '%Y-%m-%d %T') AS `createDate`
+  </sql>
+  
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.mob.app.pojo.Criteria" >
+    <include refid="common.MySQL_Pagination_Head" />
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Select_Column_List" />
+    from `tb_books`
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <include refid="common.MySQL_Pagination_Tail" />
+  </select>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Select_Column_List" />
+    from `tb_books`
+    where `id` = #{id}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from `tb_books` where `id` = #{id}
+  </delete>
+  
+  <insert id="insert" parameterType="org.mob.app.pojo.Book">
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="BEFORE" >
+      select nextval('Book')
+    </selectKey>
+    insert into `tb_books` (
+    	<include refid="Base_Column_List" />
+    )
+    values (
+    #{id}, #{name}, #{edition}, #{isbn}, #{author}, #{translator}, #{publisher}, #{publishDate}, #{price}, #{remarks}, STR_TO_DATE(#{createDate}, '%Y-%m-%d %T')
+    )
+  </insert>
+  
+  <select id="countByExample" parameterType="org.mob.app.pojo.Criteria" resultType="java.lang.Integer" >
+    select count(id) from `tb_books`
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  
+  <update id="updateByPrimaryKey" parameterType="org.mob.app.pojo.Book" >
+    update `tb_books`
+    set
+    `name` = #{name},
+    `edition` = #{edition},
+    `isbn` = #{isbn},
+	`author` = #{author},
+	`translator` = #{translator},
+	`publisher` = #{publisher},
+    `publish_date` = #{publishDate},
+    `price` = #{price},
+	`remarks` = #{remarks}
+    where `id` = #{id}
+  </update>
+</mapper>
